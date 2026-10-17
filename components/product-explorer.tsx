@@ -34,7 +34,7 @@ export function ProductExplorer() {
       <div className="product-card-body"><span className="product-kind">FGF Pet Food Bazaar</span><h3>{product.name}</h3><p>{product.description}</p><button className="card-action" type="button" onClick={() => setSelected(product)}>Take a closer look <span aria-hidden="true">↗</span></button></div>
     </article>)}</div>
     {shown.length === 0 && <p className="empty-state">No treats match that search yet. Try another sniff around.</p>}
-    <div className="shop-footnote"><span className="footnote-paw" aria-hidden="true">🐾</span><span>Product details and availability can be added when the shop is connected.</span><a className="text-link" href="#brands">Meet our brands ↗</a></div>
+    <div className="shop-footnote"><span className="footnote-paw" aria-hidden="true">🐾</span><span>Product details and availability can be added when the shop is connected.</span><a className="text-link" href="/#brands">Meet our brands ↗</a></div>
     {selected && <dialog className="site-dialog" open aria-labelledby="product-title"><button className="dialog-close" type="button" onClick={() => setSelected(null)} aria-label="Close">×</button><div className="dialog-product"><img src={`/assets/products/${selected.image}`} alt={selected.name} /><div><span className="product-kind">{selected.kind}</span><h2 id="product-title">{selected.name}</h2><p>{selected.description}</p><p>Offer chews with supervision, fresh water and a size that suits your dog.</p><button className="button button-dark" type="button" onClick={() => toggleSaved(selected.id)}>♡ Save this favorite</button></div></div></dialog>}
   </>;
 }
