@@ -59,3 +59,9 @@
   .fgf-help-link{min-height:86px;padding:13px 15px}
 }
 @media(max-width:390px){.shop-heading-action .button{width:100%}.fgf-help-copy h2{font-size:2.1rem}}
+
+/* Product details use the browser's modal top layer so they stay centered in the viewport. */
+.site-dialog{position:fixed;inset:0;margin:auto;width:min(800px,calc(100vw - 32px));max-width:none;height:fit-content;max-height:min(780px,calc(100vh - 32px));max-height:min(780px,calc(100dvh - 32px));overflow:auto;overscroll-behavior:contain}
+.dialog-product{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);padding:clamp(20px,4vw,34px)}
+.dialog-product img{height:min(340px,58dvh)}
+@media(max-width:760px){.site-dialog{width:calc(100vw - 24px);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);border-radius:20px}.dialog-product{grid-template-columns:1fr;gap:14px;padding:22px}.dialog-product img{height:min(30dvh,230px);min-height:160px}}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const products = [
   { id: "bully-stick-6", name: "6-inch Bully Stick", kind: "BEEF CHEW", group: "beef", image: "bully-stick-6.webp", description: "A familiar chew in a handy 6-inch format. A satisfying little ritual for dogs who love to settle in and chew." },
@@ -10,6 +10,30 @@ const products = [
   { id: "lamb-tripe", name: "Lamb Tripe", kind: "LAMB CHEW", group: "little", image: "lamb-tripe.webp", description: "A flavorful lamb chew with a distinctive aroma dogs love to investigate." },
   { id: "bully-stick-12", name: "12-inch Bully Stick", kind: "BEEF CHEW", group: "beef", image: "bully-stick-12.webp", description: "A longer format for dogs who enjoy a more substantial chew. Choose a size suited to your dog." },
 ];
+
+type Product = (typeof products)[number];
+
+function ProductDialog({ product, onClose, onSave }: {
+  product: Product;
+  onClose: () => void;
+  onSave: () => void;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    dialog.showModal();
+    return () => {
+      if (dialog.open) dialog.close();
+    };
+  }, []);
+
+  return <dialog ref={dialogRef} className="site-dialog" aria-labelledby="fgf-product-title" onCancel={(event) => { event.preventDefault(); onClose(); }} onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <button className="dialog-close" type="button" onClick={onClose} aria-label="Close">×</button>
+    <div className="dialog-product"><img src={`/assets/products/${product.image}`} alt={product.name} /><div><span className="product-kind">{product.kind}</span><h2 id="fgf-product-title">{product.name}</h2><p>{product.description}</p><p>Offer chews with supervision, fresh water and a size that suits your dog.</p><button className="button button-dark" type="button" onClick={onSave}>♡ Save this favorite</button></div></div>
+  </dialog>;
+}
 
 export function ProductExplorer() {
   const [filter, setFilter] = useState("all");
@@ -35,6 +59,6 @@ export function ProductExplorer() {
     </article>)}</div>
     {shown.length === 0 && <p className="empty-state">No treats match that search yet. Try another sniff around.</p>}
     <div className="shop-footnote"><span className="footnote-paw" aria-hidden="true">🐾</span><span>Product details and availability can be added when the shop is connected.</span><a className="text-link" href="/#brands">Meet our brands ↗</a></div>
-    {selected && <dialog className="site-dialog" open aria-labelledby="product-title"><button className="dialog-close" type="button" onClick={() => setSelected(null)} aria-label="Close">×</button><div className="dialog-product"><img src={`/assets/products/${selected.image}`} alt={selected.name} /><div><span className="product-kind">{selected.kind}</span><h2 id="product-title">{selected.name}</h2><p>{selected.description}</p><p>Offer chews with supervision, fresh water and a size that suits your dog.</p><button className="button button-dark" type="button" onClick={() => toggleSaved(selected.id)}>♡ Save this favorite</button></div></div></dialog>}
+    {selected && <ProductDialog product={selected} onClose={() => setSelected(null)} onSave={() => toggleSaved(selected.id)} />}
   </>;
 }
