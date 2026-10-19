@@ -45,7 +45,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-main section-wrap">
         <div className="footer-brand"><Link href="/"><img src="/assets/logo-fgf.webp" alt="FGF Pet Food Bazaar" /></Link><p>Better food. Happier pets. More little moments worth keeping.</p><span className="footer-sparkle" aria-hidden="true">✦ ✿ ✦</span></div>
-        <div><h3>Take a look</h3><Link href="/#brands">Our brands</Link><Link href="/shop">Shop the Bazaar</Link><Link href="/#journal">Journal</Link><Link href="/#community">Community</Link></div>
+        <div><h3>Take a look</h3><Link href="/#brands">Our brands</Link><Link href="/shop">Shop the Bazaar</Link><Link href="/#happy-box">Build a happy box</Link><Link href="/#happy-tails">Happy tails scrapbook</Link><Link href="/#journal">Journal</Link><Link href="/#community">Community</Link></div>
         <div className="footer-contact"><h3>Say hello</h3><a href="tel:+18325550188">☎ +1 (832) 555-0188</a><a href="mailto:info@fgfpetfoodbazaar.com">✉ info@fgfpetfoodbazaar.com</a><a href="https://www.fgfpetfood.com/" target="_blank" rel="noreferrer">Current FGF website ↗</a></div>
         <div className="footer-note"><span aria-hidden="true">🐾</span><strong>Good food.<br />Good company.</strong><small>Happier days start here!</small><Link className="footer-note-link" href="/shop">Find a new favorite →</Link></div>
       </div>

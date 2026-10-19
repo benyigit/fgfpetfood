@@ -1,3 +1,5 @@
+import { BoxBuilder } from "@/components/box-builder";
+import { HappyTails } from "@/components/happy-tails";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import { ProductExplorer } from "@/components/product-explorer";
 import { QuizFinder } from "@/components/quiz-finder";
@@ -18,9 +20,11 @@ export default function HomePage() {
         <article className="brand-card brand-card-quipaw"><div className="brand-card-copy"><span className="brand-tag">Dog treats with a tail-wag</span><h3>Quipaw</h3><p>Natural chews and simple treat-time fun, made for curious noses and happy paws.</p><a className="button button-dark" href="https://quipaw.com">Visit Quipaw <span aria-hidden="true">↗</span></a></div><img src="/assets/logo-quipaw.png" alt="" className="brand-card-logo quipaw-logo" /><span className="brand-doodle" aria-hidden="true">♡</span></article>
       </div></section>
       <section id="shop" className="section-wrap shop-section"><div className="section-heading shop-heading"><div><p className="eyebrow">The treat shelf</p><h2>Little favorites for <em>big tail wags.</em></h2></div><div className="shop-heading-action"><p>Have a snack in mind? Search or save a favorite for later.</p><Link className="button button-dark" href="/shop">Browse the full shop <span aria-hidden="true">→</span></Link></div></div><ProductExplorer /></section>
+      <BoxBuilder />
       <QuizFinder />
       <JournalSection />
       <section id="community" className="community-section"><div className="section-wrap community-inner"><div className="community-copy"><p className="eyebrow">Good times, together</p><h2>The next big tail wag <em>starts here.</em></h2><p>We’re getting the community calendar ready. Join the pack and we’ll share news when the next meet-up or event is announced.</p><a className="button button-light" href="#newsletter">Keep me in the loop <span aria-hidden="true">→</span></a></div><a className="community-art pdf-community-art" href="#newsletter" aria-label="Get updates about FGF community events"><img src="/assets/fgf-pdf-events.webp" alt="A happy dog at an outdoor activity beneath the words Events and Activities" /></a><div className="community-confetti" aria-hidden="true">✳ ✦ ✿</div></div></section>
+      <HappyTails brand="fgf" />
       <Newsletter />
     </main>
     <SiteFooter />

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { ProductExplorer } from "@/components/product-explorer";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
@@ -17,7 +18,7 @@ export default function ShopPage() {
             <p className="eyebrow">A happy place for snack time</p>
             <h1>Find their next <em>happy favorite.</em></h1>
             <p>Browse thoughtful chews and little treats picked for curious noses, wagging tails and everyday good moments.</p>
-            <div className="bazaar-shop-perks"><span>🐾 Pet-first picks</span><span>✿ Happy little rituals</span></div>
+            <Link className="button button-dark" href="/#happy-box">Build their happy box <span aria-hidden="true">→</span></Link><div className="bazaar-shop-perks"><span>🐾 Pet-first picks</span><span>✿ Happy little rituals</span></div>
           </div>
           <div className="bazaar-shop-art"><img src="/assets/products/beef-lung.webp" alt="A FGF Pet Food Bazaar beef lung treat package" /><span>Good<br />choice!</span></div>
         </div>
