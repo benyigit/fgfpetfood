@@ -50,7 +50,7 @@ export async function DELETE(request: Request, context: Context) {
     const p = await getPhoto(context, true);
     if (p.user_id !== member.id) throw new CommunityError(404, 'Photo not found.');
     if (!p.deleted_at) await transaction([
-      { sql: "UPDATE photos SET consent=0,social_consent=0,deleted_at=?,dog_name='',caption='' WHERE id=? AND user_id=?", values: [Date.now(), p.id, member.id] },
+      { sql: "UPDATE photos SET consent=0,social_consent=0,deleted_at=?,dog_name='',title='',caption='' WHERE id=? AND user_id=?", values: [Date.now(), p.id, member.id] },
       consentEvent(p.id, member.id, false, 'website'),
       consentEvent(p.id, member.id, false, 'social')
     ]);

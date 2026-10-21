@@ -7,7 +7,7 @@ export async function GET() {
       photos: []
     });
     return result({
-      photos: await rows('SELECT id,dog_name,caption FROM photos WHERE consent=1 AND hidden=0 AND deleted_at IS NULL ORDER BY created_at DESC LIMIT 30')
+      photos: await rows('SELECT id,dog_name,title,category,caption FROM photos WHERE consent=1 AND hidden=0 AND deleted_at IS NULL ORDER BY created_at DESC LIMIT 30')
     });
   } catch (e) {
     return failure(e);

@@ -10,7 +10,7 @@ const derive = (password: string, salt: string) => new Promise<Buffer>((resolve,
   p: 1,
   maxmem: 256 * 1024 * 1024
 }, (error, key) => error ? reject(error) : resolve(key)));
-export const CONSENT_VERSION = 'sharing-v2';
+export const CONSENT_VERSION = 'sharing-v3';
 export const CONSENT_TEXT = consentCopy.en;
 export const cookieName = 'fgfpetfood_community';
 export class CommunityError extends Error {
@@ -37,6 +37,8 @@ export type Photo = {
   user_id: string;
   dog_name: string;
   caption: string;
+  title: string;
+  category: string;
   consent: number;
   social_consent: number;
   hidden: number;

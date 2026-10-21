@@ -13,3 +13,5 @@
 @media(max-width:650px){.permissionChoice{padding:14px}.photoGrid:has(.permissionBox){grid-template-columns:1fr}.permissionIcon{display:none}.sharingChoices legend{font-size:16px}}
 
 .accountReference{display:block;font-size:10px;color:#5b736b;margin:18px 0;line-height:1.7}.accountReference code{display:block;overflow-wrap:anywhere;user-select:all}
+
+.sharingChoices .visibilityNote{padding:11px 13px;margin:4px 0 0;border-radius:11px;background:#eef4e8;font-weight:700;font-size:11px;line-height:1.65;color:#386c55}

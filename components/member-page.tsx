@@ -18,7 +18,7 @@ type Member = {
 type Photo = {
   id: string;
   dog_name: string;
-  caption: string;
+  caption: string; title: string; category: string;
   consent: number;
   social_consent: number;
   hidden: number;
@@ -269,7 +269,7 @@ export function MemberPage() {
                   setError('');
                   setFile(f);
                 }} /></label><label>{'Their name'}<input value={dogName} onChange={e => setDogName(e.target.value)} required maxLength={40} /></label><label>{'A little story'}<textarea value={caption} onChange={e => setCaption(e.target.value)} maxLength={240} rows={3} required placeholder={'What made their tail wag today?'} /></label><SharingChoices website={consent} social={socialConsent} onWebsite={setConsent} onSocial={setSocialConsent} disabled={busy} /><button className="button button-dark" disabled={busy || !file}>{busy ? 'Saving…' : consent || socialConsent ? 'Save with my permissions →' : 'Save privately →'}</button></form></section></div>
- <section className={s.album}><div><p className="eyebrow">{'Your little collection'}</p><h2>{'Their photo'} <em>{'album.'}</em></h2><p>{'Control website and social media sharing separately for every photo.'}</p></div>{photos.length ? <div className={s.photoGrid}>{photos.map(photo => <article key={photo.id}><img src={`/api/community/photos/${photo.id}`} alt={photo.caption} loading="lazy" /><div className={s.photoBody}><div className={s.badges}><span className={photo.consent && !photo.hidden ? s.publicBadge : s.privateBadge}>{photo.hidden && photo.consent ? 'Gallery · hidden by team' : photo.consent ? 'Website · shared' : 'Website · private'}</span><span className={photo.social_consent ? s.socialBadge : s.privateBadge}>{photo.social_consent ? 'Social · permission given' : 'Social · no permission'}</span></div><h3>{photo.dog_name}</h3><p>{photo.caption}</p><div className={s.photoActions}><button disabled={busy} onClick={() => {
+ <section className={s.album}><div><p className="eyebrow">{'Your little collection'}</p><h2>{'Their photo'} <em>{'album.'}</em></h2><p>{'Control website and social media sharing separately for every photo.'}</p></div>{photos.length ? <div className={s.photoGrid}>{photos.map(photo => <article key={photo.id}><img src={`/api/community/photos/${photo.id}`} alt={photo.caption} loading="lazy" /><div className={s.photoBody}><div className={s.badges}><span className={photo.consent && !photo.hidden ? s.publicBadge : s.privateBadge}>{photo.hidden && photo.consent ? 'Gallery · hidden by team' : photo.consent ? 'Website · shared' : 'Website · private'}</span><span className={photo.social_consent ? s.socialBadge : s.privateBadge}>{photo.social_consent ? 'Social · permission given' : 'Social · no permission'}</span></div><h3>{photo.title || photo.dog_name}</h3>{photo.title && <small>{photo.dog_name}</small>}<p>{photo.caption}</p><div className={s.photoActions}><button disabled={busy} onClick={() => {
                     setShareId(photo.id);
                     setShareConsent(Boolean(photo.consent));
                     setShareSocial(Boolean(photo.social_consent));

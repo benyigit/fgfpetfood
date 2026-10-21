@@ -31,3 +31,7 @@ For FGF use `fgfpetfood_users`. Do not copy roles between brands. Role assignmen
 4. The operator can use `/account/community` to view authorized photos, download photos with active social consent, hide/unhide permitted website photos, and action social withdrawals. The moderation link appears in their account when their role is assigned.
 
 The dashboard shows the latest 100 authorized photos and latest 100 withdrawal events. The underlying consent history remains in the database. Photos are capped at 20 per member; mobile originals up to 8 MB are compressed before the serverless request.
+
+
+## Inline scrapbook composer
+The home-page share button opens a native dialog with a live polaroid preview. Authentication happens inside the dialog without losing the photo or story. New memories store a title and a category (cosy/outdoors/funny). Existing memories retain their original permissions and use the community category until they have a category. Additive, idempotent database migrations preserve existing accounts/photos. Public cards use only consented, visible, non-deleted entries. Website and brand social permissions remain independent and default to false. Consent receipts use sharing-v3 with the exact brand-specific text.

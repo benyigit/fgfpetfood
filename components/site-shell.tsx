@@ -57,7 +57,7 @@ export function SiteFooter() {
     </section>
     <footer className="site-footer">
       <div className="footer-main section-wrap">
-        <div className="footer-brand"><Link href="/"><img src="/assets/logo-fgf.webp" alt={t("FGF Pet Food Bazaar")} /></Link><p>{t("Better food. Happier pets. More little moments worth keeping.")}</p><span className="footer-sparkle" aria-hidden="true">✦ ✿ ✦</span></div>
+        <div className="footer-brand"><Link href="/"><img src="/assets/logo-fgf.webp" alt={t("FGF Pet Food Bazaar")} /></Link><p>{t("FGF Pet Food Bazaar LLC is the company behind Quipaw. Our dog-treat range includes bully sticks, beef lung, cow and lamb ears, chicken feet, lamb tripe and collagen chews.")}</p><span className="footer-sparkle" aria-hidden="true">✦ ✿ ✦</span></div>
         <div><h3>{t("Take a look")}</h3><Link href="/#brands">{t("Our brands")}</Link><Link href="/shop">{t("Shop the Bazaar")}</Link><Link href="/#happy-box">{t("Build a happy box")}</Link><Link href="/#happy-tails">{t("Happy tails scrapbook")}</Link><Link href="/blog">{t("Blog")}</Link><Link href="/events">{t("Events")}</Link></div>
         <div className="footer-contact"><h3>{t("Say hello")}</h3><a href="tel:+12813010010">☎ 281-301-0010</a><a href="mailto:info@fgfpetfoodbazaar.com">{t("✉ info@fgfpetfoodbazaar.com")}</a><a href="https://www.fgfpetfood.com/" target="_blank" rel="noreferrer">{t("Current FGF website ↗")}</a></div>
         <div className="footer-note"><span aria-hidden="true">🐾</span><strong>{t("Good food.")}<br />{t("Good company.")}</strong><small>{t("Happier days start here!")}</small><Link className="footer-note-link" href="/shop">{t("Find a new favorite →")}</Link></div>

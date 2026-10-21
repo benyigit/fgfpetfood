@@ -34,17 +34,23 @@ async function initialize() {
   const statements = [
     `CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE NOT NULL,password TEXT NOT NULL,name TEXT NOT NULL,dog_name TEXT NOT NULL DEFAULT '',breed TEXT NOT NULL DEFAULT '',role TEXT NOT NULL DEFAULT 'member',created_at BIGINT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,expires_at BIGINT NOT NULL)`,
-    `CREATE TABLE IF NOT EXISTS photos(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,dog_name TEXT NOT NULL,caption TEXT NOT NULL,consent INTEGER NOT NULL DEFAULT 0,social_consent INTEGER NOT NULL DEFAULT 0,hidden INTEGER NOT NULL DEFAULT 0,deleted_at BIGINT,created_at BIGINT NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS photos(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,dog_name TEXT NOT NULL,title TEXT NOT NULL DEFAULT '',category TEXT NOT NULL DEFAULT 'community',caption TEXT NOT NULL,consent INTEGER NOT NULL DEFAULT 0,social_consent INTEGER NOT NULL DEFAULT 0,hidden INTEGER NOT NULL DEFAULT 0,deleted_at BIGINT,created_at BIGINT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS consent_events(id ${pg ? 'BIGSERIAL' : 'INTEGER'} PRIMARY KEY,photo_id TEXT NOT NULL REFERENCES photos(id) ON DELETE CASCADE,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,granted INTEGER NOT NULL,scope TEXT NOT NULL DEFAULT 'website',version TEXT NOT NULL,text TEXT NOT NULL,created_at BIGINT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS rate_limits(key TEXT PRIMARY KEY,hits INTEGER NOT NULL,reset_at BIGINT NOT NULL)`
   ];
   if (pg) {
     const sql = neon(connection()!);
-    await sql.transaction(statements.map(s => sql.query(cloudSQL(s), [])));
+    await sql.transaction([
+      ...statements,
+      "ALTER TABLE photos ADD COLUMN IF NOT EXISTS title TEXT NOT NULL DEFAULT ''",
+      "ALTER TABLE photos ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'community'"
+    ].map(s => sql.query(cloudSQL(s), [])));
   } else {
     const db = localDB();
     statements.forEach(s => db.exec(s));
     for (const [table, column, definition] of [
+      ['photos', 'title', "TEXT NOT NULL DEFAULT ''"],
+      ['photos', 'category', "TEXT NOT NULL DEFAULT 'community'"],
       ['users', 'role', "TEXT NOT NULL DEFAULT 'member'"],
       ['photos', 'social_consent', 'INTEGER NOT NULL DEFAULT 0'],
       ['photos', 'hidden', 'INTEGER NOT NULL DEFAULT 0'],
