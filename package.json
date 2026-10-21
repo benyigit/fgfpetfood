@@ -15,7 +15,9 @@
     "next": "16.4.2",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "@neondatabase/serverless": "^1.2.0",
+    "@vercel/blob": "^2.8.2"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

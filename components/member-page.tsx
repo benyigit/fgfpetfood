@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { SiteHeader, SiteFooter } from './site-shell';
 import { useLanguage } from './language-provider';
-import { consentCopy } from '@/lib/community-consent';
+import { prepareCommunityPhoto } from '@/lib/prepare-community-photo';
+import { SharingChoices } from './sharing-choices';
 import s from './member.module.css';
 type Member = {
   id: string;
@@ -12,19 +13,22 @@ type Member = {
   name: string;
   dog_name: string;
   breed: string;
+  role: string;
 };
 type Photo = {
   id: string;
   dog_name: string;
   caption: string;
   consent: number;
+  social_consent: number;
+  hidden: number;
 };
 async function api(url: string, init?: RequestInit) {
   const r = await fetch(url, {
     ...init,
     cache: 'no-store'
   });
-  const data = await r.json();
+  const data = await r.json().catch(() => ({ error: 'We could not complete that request. Please try again.' }));
   if (!r.ok) throw new Error(data.error || 'Please try again.');
   return data;
 }
@@ -39,7 +43,6 @@ export function MemberPage() {
     language,
     t
   } = useLanguage();
-  const lang = 'en';
   const [available, setAvailable] = useState(true);
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,9 +57,11 @@ export function MemberPage() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState('');
   const [consent, setConsent] = useState(false);
+  const [socialConsent, setSocialConsent] = useState(false);
   const [shareId, setShareId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [shareConsent, setShareConsent] = useState(false);
+  const [shareSocial, setShareSocial] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const feedback = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -130,6 +135,7 @@ export function MemberPage() {
       setFile(null);
       setCaption('');
       setConsent(false);
+      setSocialConsent(false);
       setStatus('');
     } catch (e) {
       setError((e as Error).message);
@@ -168,10 +174,11 @@ export function MemberPage() {
     setStatus('');
     try {
       const data = new FormData();
-      data.set('photo', file);
+      data.set('photo', await prepareCommunityPhoto(file), 'happy-moment.webp');
       data.set('dog_name', dogName);
       data.set('caption', caption);
       data.set('consent', String(consent));
+      data.set('social_consent', String(socialConsent));
       data.set('language', language);
       await api('/api/community/photos', {
         method: 'POST',
@@ -181,8 +188,9 @@ export function MemberPage() {
       setFile(null);
       setCaption('');
       setConsent(false);
+      setSocialConsent(false);
       if (fileInput.current) fileInput.current.value = '';
-      setStatus(consent ? 'Your moment is now in the public gallery.' : 'Saved privately. Only you can see this photo.');
+      setStatus(consent ? 'Your moment is now in the gallery. Your separate social media choice is saved too.' : socialConsent ? 'Saved outside the public gallery. The brand team may access it for the social sharing you allowed.' : 'Saved privately. Only you can see this photo.');
       announce();
     } catch (e) {
       setError((e as Error).message);
@@ -190,7 +198,7 @@ export function MemberPage() {
       setBusy(false);
     }
   }
-  async function sharing(photoId: string, granted: boolean) {
+  async function sharing(photoId: string) {
     setBusy(true);
     setError('');
     try {
@@ -200,14 +208,15 @@ export function MemberPage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          consent: granted,
+          consent: shareConsent,
+          social_consent: shareSocial,
           language
         })
       });
       await reloadPhotos();
       setShareId(null);
       setShareConsent(false);
-      setStatus(granted ? 'Sharing permission saved.' : 'Permission withdrawn. This photo is now private and has been removed from the public gallery.');
+      setStatus('Your website and social media permissions have been updated.');
       announce();
     } catch (e) {
       setError((e as Error).message);
@@ -247,7 +256,7 @@ export function MemberPage() {
                 setError('');
               }}>{'Create account →'}</button></p>}
   {mode === 'register' && <label>{'Your name'}<input name="name" autoComplete="name" required maxLength={60} /></label>}<label>{'Email address'}<input type="email" name="email" autoComplete="email" required maxLength={254} /></label><label>{'Password'}<input type="password" name="password" minLength={10} maxLength={128} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} required /><small>{'At least 10 characters.'}</small></label><button disabled={busy} className="button button-dark">{busy ? 'One little moment…' : mode === 'login' ? 'Sign in →' : 'Create my account →'}</button><p className={s.hint}>{'Your account details stay private. Photo sharing is optional and can be withdrawn at any time.'}</p></form></div></div> : <><div className={s.dashboardHeading}><div><p className="eyebrow">{'Your happy tails club'}</p><h1>{'Hello,'} <em>{member.name}.</em></h1><p>{'A little home for their happiest moments.'}</p></div><button className={s.outlineButton} onClick={logout} disabled={busy}>{'Sign out'} ↗</button></div>
- <div className={s.dashboard}><aside className={s.profile}><span className={s.bigPaw}>🐾</span><h2>{dogName || 'Your good dog'}</h2><form className={s.form} onSubmit={saveProfile}><label>{'Their name'}<input value={dogName} onChange={e => setDogName(e.target.value)} maxLength={40} placeholder="Charlie" /></label><label>{'Breed / a lovely mix'}<input value={breed} onChange={e => setBreed(e.target.value)} maxLength={60} placeholder={'Tell us a little about them'} /></label><button disabled={busy} className={s.outlineButton}>{'Save their profile'}</button></form><p className={s.hint}>{'Only the dog’s name and the caption appear with a shared photo. Your email and account name are never shown in the gallery.'}</p><Link href="/#happy-tails">{'Visit the public gallery →'}</Link></aside>
+ <div className={s.dashboard}><aside className={s.profile}><span className={s.bigPaw}>🐾</span><h2>{dogName || 'Your good dog'}</h2><form className={s.form} onSubmit={saveProfile}><label>{'Their name'}<input value={dogName} onChange={e => setDogName(e.target.value)} maxLength={40} placeholder="Charlie" /></label><label>{'Breed / a lovely mix'}<input value={breed} onChange={e => setBreed(e.target.value)} maxLength={60} placeholder={'Tell us a little about them'} /></label><button disabled={busy} className={s.outlineButton}>{'Save their profile'}</button></form><p className={s.hint}>{'Only the dog’s name and the caption appear with a shared photo. Your email and account name are never shown in the gallery.'}</p><small className={s.accountReference}>Account reference: <code>{member.id}</code></small><Link href="/#happy-tails">{'Visit the public gallery →'}</Link>{member.role === 'moderator' && <Link className={s.teamLink} href="/account/community">Manage community permissions →</Link>}</aside>
  <section className={s.uploadCard}><p className="eyebrow">{'Make a little memory'}</p><h2>{'That tail-wagging'} <em>{'moment.'}</em></h2><form className={s.form} onSubmit={upload}><label className={s.upload}>{preview ? <img src={preview} alt={'Your selected photo'} /> : <span><b>＋</b>{'Choose their photo'}<small>JPG · PNG · WebP · 8 MB</small></span>}<input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp" required onChange={e => {
                   const f = e.target.files?.[0];
                   if (!f) return;
@@ -259,15 +268,14 @@ export function MemberPage() {
                   }
                   setError('');
                   setFile(f);
-                }} /></label><label>{'Their name'}<input value={dogName} onChange={e => setDogName(e.target.value)} required maxLength={40} /></label><label>{'A little story'}<textarea value={caption} onChange={e => setCaption(e.target.value)} maxLength={240} rows={3} required placeholder={'What made their tail wag today?'} /></label><label className={s.consent}><input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} /><span>{consentCopy[lang]}</span></label><button className="button button-dark" disabled={busy || !file}>{busy ? 'Saving…' : consent ? 'Save & share this moment →' : 'Save privately →'}</button></form></section></div>
- <section className={s.album}><div><p className="eyebrow">{'Your little collection'}</p><h2>{'Their photo'} <em>{'album.'}</em></h2><p>{'Share a moment, keep it private or withdraw permission whenever you like.'}</p></div>{photos.length ? <div className={s.photoGrid}>{photos.map(photo => <article key={photo.id}><img src={`/api/community/photos/${photo.id}`} alt={photo.caption} loading="lazy" /><div className={s.photoBody}><span className={photo.consent ? s.publicBadge : s.privateBadge}>{photo.consent ? 'Shared in the gallery' : 'Only you'}</span><h3>{photo.dog_name}</h3><p>{photo.caption}</p><div className={s.photoActions}><button disabled={busy} onClick={() => {
-                    if (photo.consent) sharing(photo.id, false);else {
-                      setShareId(photo.id);
-                      setShareConsent(false);
-                    }
-                  }}>{photo.consent ? 'Withdraw permission' : 'Share in the gallery'}</button><button disabled={busy} onClick={() => setDeleteId(photo.id)}>{'Delete'}</button></div>
- {shareId === photo.id && <div className={s.permissionBox}><label className={s.consent}><input type="checkbox" checked={shareConsent} onChange={e => setShareConsent(e.target.checked)} /><span>{consentCopy[lang]}</span></label><button className="button button-dark" disabled={!shareConsent || busy} onClick={() => sharing(photo.id, true)}>{'Give permission & share'}</button><button className={s.textButton} onClick={() => setShareId(null)}>{'Cancel'}</button></div>}
- {deleteId === photo.id && <div className={s.permissionBox}><p>{'Delete this photo from your album and the gallery?'}</p><button disabled={busy} className={s.outlineButton} onClick={() => remove(photo.id)}>{'Yes, delete photo'}</button><button className={s.textButton} onClick={() => setDeleteId(null)}>{'Keep it'}</button></div>}</div></article>)}</div> : <div className={s.empty}>{'Their first happy moment belongs here. Add a photo above.'}</div>}</section></>}
+                }} /></label><label>{'Their name'}<input value={dogName} onChange={e => setDogName(e.target.value)} required maxLength={40} /></label><label>{'A little story'}<textarea value={caption} onChange={e => setCaption(e.target.value)} maxLength={240} rows={3} required placeholder={'What made their tail wag today?'} /></label><SharingChoices website={consent} social={socialConsent} onWebsite={setConsent} onSocial={setSocialConsent} disabled={busy} /><button className="button button-dark" disabled={busy || !file}>{busy ? 'Saving…' : consent || socialConsent ? 'Save with my permissions →' : 'Save privately →'}</button></form></section></div>
+ <section className={s.album}><div><p className="eyebrow">{'Your little collection'}</p><h2>{'Their photo'} <em>{'album.'}</em></h2><p>{'Control website and social media sharing separately for every photo.'}</p></div>{photos.length ? <div className={s.photoGrid}>{photos.map(photo => <article key={photo.id}><img src={`/api/community/photos/${photo.id}`} alt={photo.caption} loading="lazy" /><div className={s.photoBody}><div className={s.badges}><span className={photo.consent && !photo.hidden ? s.publicBadge : s.privateBadge}>{photo.hidden && photo.consent ? 'Gallery · hidden by team' : photo.consent ? 'Website · shared' : 'Website · private'}</span><span className={photo.social_consent ? s.socialBadge : s.privateBadge}>{photo.social_consent ? 'Social · permission given' : 'Social · no permission'}</span></div><h3>{photo.dog_name}</h3><p>{photo.caption}</p><div className={s.photoActions}><button disabled={busy} onClick={() => {
+                    setShareId(photo.id);
+                    setShareConsent(Boolean(photo.consent));
+                    setShareSocial(Boolean(photo.social_consent));
+                  }}>Manage sharing</button><button disabled={busy} onClick={() => setDeleteId(photo.id)}>Delete</button></div>
+ {shareId === photo.id && <div className={s.permissionBox}><SharingChoices website={shareConsent} social={shareSocial} onWebsite={setShareConsent} onSocial={setShareSocial} disabled={busy} /><button className="button button-dark" disabled={busy} onClick={() => sharing(photo.id)}>Save permissions</button><button className={s.textButton} onClick={() => setShareId(null)}>Cancel</button></div>}
+ {deleteId === photo.id && <div className={s.permissionBox}><p>{'Delete this photo and withdraw both permissions? The team will be notified if social sharing permission was previously given.'}</p><button disabled={busy} className={s.outlineButton} onClick={() => remove(photo.id)}>{'Yes, delete photo'}</button><button className={s.textButton} onClick={() => setDeleteId(null)}>{'Keep it'}</button></div>}</div></article>)}</div> : <div className={s.empty}>{'Their first happy moment belongs here. Add a photo above.'}</div>}</section></>}
  {(error || status) && <div ref={feedback} tabIndex={-1} className={s.feedback}><div className={error ? s.error : s.success} role={error ? "alert" : "status"}>{error ? t(error) : status}<button type="button" onClick={() => {
             setError('');
             setStatus('');

@@ -1,7 +1,9 @@
-import { communityAvailable, db, id, field, jsonBody, sameOrigin, rateLimit, hashPassword, checkPassword, startSession, endSession, currentMember, result, failure, CommunityError } from '@/lib/community';
+import { communityAvailable, id, field, jsonBody, sameOrigin, rateLimit, hashPassword, checkPassword, startSession, endSession, currentMember, result, failure, CommunityError } from '@/lib/community';
+import { one, run, initializeCommunity } from '@/lib/community-db';
 export const runtime = 'nodejs';
 export async function GET() {
   try {
+    if (communityAvailable()) await initializeCommunity();
     return result({
       available: communityAvailable(),
       member: communityAvailable() ? await currentMember() : null
@@ -18,20 +20,17 @@ export async function POST(request: Request) {
     const password = body.password;
     if (typeof password !== 'string' || password.length > 128) throw new CommunityError(400, 'Please check the form.');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 10) throw new CommunityError(400, 'Use a valid email and a password of at least 10 characters.');
-    rateLimit(`auth-email:${email}`);
-    rateLimit(`auth-origin:${request.headers.get('x-forwarded-for') || 'local'}`, 50);
+    await rateLimit(`auth-email:${email}`);
+    await rateLimit(`auth-origin:${request.headers.get('x-forwarded-for') || 'local'}`, 50);
     if (body.mode === 'register') {
       const name = field(body.name, 60);
-      if (db().prepare('SELECT id FROM users WHERE email=?').get(email)) throw new CommunityError(409, 'Unable to create this account. Try signing in.');
+      if (await one('SELECT id FROM users WHERE email=?', [email])) throw new CommunityError(409, 'Unable to create this account. Try signing in.');
       const userId = id();
       const hashed = await hashPassword(password);
-      db().prepare('INSERT INTO users(id,email,password,name,created_at) VALUES (?,?,?,?,?)').run(userId, email, hashed, name, Date.now());
+      await run('INSERT INTO users(id,email,password,name,created_at) VALUES (?,?,?,?,?)', [userId, email, hashed, name, Date.now()]);
       await startSession(userId, request);
     } else if (body.mode === 'login') {
-      const user = db().prepare('SELECT id,password FROM users WHERE email=?').get(email) as {
-        id: string;
-        password: string;
-      } | undefined;
+      const user = await one<{ id: string; password: string }>('SELECT id,password FROM users WHERE email=?', [email]);
       const dummy = '00000000000000000000000000000000:' + '00'.repeat(64);
       const valid = await checkPassword(password, user?.password || dummy);
       if (!user || !valid) throw new CommunityError(401, 'Email or password is incorrect.');
