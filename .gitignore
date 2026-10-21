@@ -7,3 +7,9 @@ coverage/
 .vercel/
 .env*
 !.env.example
+
+.community/
+
+# Local translation content is not part of public releases.
+data/messages-tr.json
+data/articles-tr.json

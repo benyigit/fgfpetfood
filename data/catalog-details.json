@@ -1,0 +1,764 @@
+{
+  "beef-lung": {
+    "ingredients": "100% Beef Lung",
+    "packSize": "10 oz (283 g)",
+    "analysis": [
+      70,
+      7,
+      6,
+      12
+    ],
+    "barcode": "860015404817",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "Light crunch. Big reward."
+    },
+    "overview": {
+      "en": "A light, airy beef treat with a rich meaty aroma. Its brittle texture breaks into smaller pieces, making it a useful reward for training and everyday discoveries."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "Airy & crisp"
+        },
+        "body": {
+          "en": "A porous, wafer-like texture gives this chew a different feel from dense sticks."
+        }
+      },
+      {
+        "title": {
+          "en": "Made for little rewards"
+        },
+        "body": {
+          "en": "Break an appropriately sized piece into smaller rewards for short training moments."
+        }
+      },
+      {
+        "title": {
+          "en": "One clear ingredient"
+        },
+        "body": {
+          "en": "The rear label lists 100% beef lung, with no lengthy recipe to decipher."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/beef-lung/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/7deecded-eeee-47f8-93d1-59da1d65492a/BEEFLUNG-front+side.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/beef-lung/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/e82de48a-17dc-410e-967c-3b64ed1c6a1b/BEEFLUNG-backside.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/beef-lung/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Beef-lung-text-#1.docx"
+  },
+  "beef-trachea": {
+    "ingredients": "100% Beef Trachea",
+    "packSize": "10 Count",
+    "analysis": [
+      60,
+      5.2,
+      5.25,
+      15
+    ],
+    "barcode": "860015404800",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "A little crunch, a whole new shape."
+    },
+    "overview": {
+      "en": "Naturally hollow and ridged, beef trachea brings crunchy and chewy textures together. The cartilage-based shape gives curious dogs something to hold, turn and explore."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "Naturally hollow"
+        },
+        "body": {
+          "en": "The tube shape and ridged surface make this chew immediately distinctive."
+        }
+      },
+      {
+        "title": {
+          "en": "Cartilage texture"
+        },
+        "body": {
+          "en": "Made from beef trachea, containing the cartilage and connective tissue of the windpipe."
+        }
+      },
+      {
+        "title": {
+          "en": "An engaging reward"
+        },
+        "body": {
+          "en": "A combination of aroma, shape and texture adds variety to treat time."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/beef-trachea/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/89c82274-107d-43c4-8a26-f623bcdd1fcb/Beef+Thrachea-front.jpg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/beef-trachea/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/dd0612c4-84ec-46e2-875a-30a7262796cf/Beef+Thrachea-back.jpg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/beef-trachea/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      }
+    ],
+    "sourceDocument": "textsofproducts/beef-trachea-text-#1.docx"
+  },
+  "braided-collagen-stick": {
+    "ingredients": "100% Hide/Skin",
+    "packSize": "15 Count · 6 inches",
+    "analysis": [
+      80,
+      0.6,
+      2.24,
+      12
+    ],
+    "barcode": "860015404862",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "Good things come with a twist."
+    },
+    "overview": {
+      "en": "A 6-inch collagen chew with a braided construction. Its intertwined sections create ridges and contours for dogs to investigate as they hold and work through the chew."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "Braided for texture"
+        },
+        "body": {
+          "en": "Multiple intertwined strands give the chew more edges and contours than a straight stick."
+        }
+      },
+      {
+        "title": {
+          "en": "Compact 6-inch format"
+        },
+        "body": {
+          "en": "A handy format to offer and hold; choose according to your dog’s size and chewing habits."
+        }
+      },
+      {
+        "title": {
+          "en": "Collagen-based chew"
+        },
+        "body": {
+          "en": "The package ingredient statement is 100% Hide/Skin. The supplied product notes describe its naturally occurring collagen."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/braided-collagen-stick/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/f057fc96-6c96-4c45-b6b6-2eff0e5b147b/Braided+collagen+stick+-+6+inches-+front+side+-turned.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/braided-collagen-stick/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/07dd14e7-02d1-4b4c-a1a4-f9a4c930c5dc/Braided+collagen+stick+-+6+inches-+backside-turned.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/braided-collagen-stick/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Braided Collagen Stick 6_-text - #1.docx"
+  },
+  "bully-stick-6": {
+    "ingredients": "100% Beef Pizzle",
+    "packSize": "10 Count · 6 inches · Medium",
+    "analysis": [
+      85,
+      1.1,
+      3.55,
+      14
+    ],
+    "barcode": "860015404824",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "Their everyday chew ritual."
+    },
+    "overview": {
+      "en": "A firm, fibrous beef chew in a convenient 6-inch format. Natural beef aroma and a straightforward stick shape make it something dogs can hold between their paws and enjoy gradually."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "Single-ingredient beef"
+        },
+        "body": {
+          "en": "The ingredient label reads 100% Beef Pizzle."
+        }
+      },
+      {
+        "title": {
+          "en": "A satisfying texture"
+        },
+        "body": {
+          "en": "A dense, fibrous surface gives dogs a chew to work on instead of a quick biscuit."
+        }
+      },
+      {
+        "title": {
+          "en": "Easy to hold"
+        },
+        "body": {
+          "en": "The 6-inch length creates a compact chew-time option. Duration varies with each dog."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/bully-stick-6/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/5a2ce28c-1d4c-421b-8a8a-eccdc706d507/Bully+stick+-+6+inch-front.JPG"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/bully-stick-6/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/bf3f330a-f967-42b4-8fe5-129d5a0bdfdc/Bully+stick+-+6+inch-back.JPG"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/bully-stick-6/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/bully-stick-6/brand-scene.webp",
+        "label": "Treat-time story",
+        "origin": "brand",
+        "source": "/Users/yigit/Desktop/gokhanbey/bullystick6/Bully stick 6-scene 01.png"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Bully stick 6_-text-#1.docx"
+  },
+  "bully-stick-12": {
+    "ingredients": "100% Beef Pizzle",
+    "packSize": "5 Count · 12 inches · Large",
+    "analysis": [
+      85,
+      1.1,
+      3.55,
+      14
+    ],
+    "barcode": "860015404831",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "More to hold. More to explore."
+    },
+    "overview": {
+      "en": "The longer member of the bully-stick family. Its 12-inch format provides more length to grip and reposition, with the same natural beef aroma and firm texture that makes a bully stick distinctive."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "A longer chew"
+        },
+        "body": {
+          "en": "Approximately 12 inches, compared with the compact 6-inch option."
+        }
+      },
+      {
+        "title": {
+          "en": "Naturally beef"
+        },
+        "body": {
+          "en": "Made from 100% beef pizzle according to the rear label."
+        }
+      },
+      {
+        "title": {
+          "en": "A more substantial moment"
+        },
+        "body": {
+          "en": "More length to hold and investigate; actual chew time depends on the individual dog."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/bully-stick-12/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/e4b51322-3a90-47f7-8c2a-5f7096b1524c/Bully+stick+-+12+inch-front.jpg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/bully-stick-12/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/3293736a-4421-41c5-8f78-7f378ed1883c/Bully+stick+-+12+inch-back.jpg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/bully-stick-12/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      }
+    ],
+    "sourceDocument": "textsofproducts/bully stick 12_ - text-#1.docx"
+  },
+  "chicken-feet": {
+    "ingredients": "100% Chicken Feet",
+    "packSize": "25 Count",
+    "analysis": [
+      54.5,
+      9.75,
+      14.5,
+      12
+    ],
+    "barcode": "860015404893",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "A naturally interesting crunch."
+    },
+    "overview": {
+      "en": "A distinctive chicken treat in its recognisable natural shape. The toes, joints and connective tissue create a varied crunchy texture, bringing something different to the treat rotation."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "A recognisable shape"
+        },
+        "body": {
+          "en": "Natural variation means individual pieces differ in size, shape and thickness."
+        }
+      },
+      {
+        "title": {
+          "en": "Connective tissue"
+        },
+        "body": {
+          "en": "Chicken feet contain skin, cartilage, tendons and small bones."
+        }
+      },
+      {
+        "title": {
+          "en": "One poultry ingredient"
+        },
+        "body": {
+          "en": "The package lists 100% Chicken Feet. A poultry option alongside the beef and lamb collection."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/chicken-feet/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/a09acd98-a13d-429d-9680-573e74920eff/Chicken+Feet+-+front+side-turned.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/chicken-feet/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/8a040a29-f899-4f3e-bedc-c216a98e7104/Chicken+Feet+-+back+side+-+turned.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/chicken-feet/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/chicken-feet/brand-scene.webp",
+        "label": "Treat-time story",
+        "origin": "brand",
+        "source": "/Users/yigit/Desktop/gokhanbey/chickenfeet/chicken feet - scene 01.png"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Chicken feet -text-#1.docx"
+  },
+  "collagen-stick-6": {
+    "ingredients": "100% Hide/Skin",
+    "packSize": "15 Count · 6 inches",
+    "analysis": [
+      80,
+      0.6,
+      2.24,
+      12
+    ],
+    "barcode": "860015404848",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "Simple shape. Happy chewing."
+    },
+    "overview": {
+      "en": "A straight 6-inch collagen chew for a simple treat-time ritual. Its uniform stick shape offers a different feel from the braided version, while giving dogs an activity to hold and explore."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "Straight & simple"
+        },
+        "body": {
+          "en": "A streamlined stick shape, compared with the ridges of our braided collagen chew."
+        }
+      },
+      {
+        "title": {
+          "en": "Naturally occurring collagen"
+        },
+        "body": {
+          "en": "The rear label lists 100% Hide/Skin; the product notes describe collagen in the animal connective tissue."
+        }
+      },
+      {
+        "title": {
+          "en": "A compact chew"
+        },
+        "body": {
+          "en": "Approximately 6 inches long. Consider thickness and chewing strength as well as length."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/collagen-stick-6/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/cad51518-30ac-4a30-aa68-cd7b5fadc9dc/Collagen+Stick+6+inch+-+front.JPG"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/collagen-stick-6/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/582f268a-f764-423d-ace5-b09f34870f0c/Collagen+Stick+6+inch+-+back.JPG"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/collagen-stick-6/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Collagen Stick 6_-text-#1.docx"
+  },
+  "cow-ear": {
+    "ingredients": "100% Cow Ear",
+    "packSize": "10 Count",
+    "analysis": [
+      75,
+      2,
+      5.5,
+      15
+    ],
+    "barcode": "860015404855",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "Naturally shaped for curious paws."
+    },
+    "overview": {
+      "en": "A broad, naturally shaped beef chew with different edges and textures to investigate. Dogs can hold it, turn it and work through the cartilage-based surface at their own pace."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "No two ears alike"
+        },
+        "body": {
+          "en": "Shape, thickness and colour naturally vary from piece to piece."
+        }
+      },
+      {
+        "title": {
+          "en": "A different mouthfeel"
+        },
+        "body": {
+          "en": "The broad ear shape offers an alternative to straight or braided sticks."
+        }
+      },
+      {
+        "title": {
+          "en": "One animal ingredient"
+        },
+        "body": {
+          "en": "The rear label lists 100% Cow Ear."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/cow-ear/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/f599ef52-0715-46ed-9406-284bda3078bf/COWEAR-frontside.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/cow-ear/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/47142b0f-53f2-4b13-88d6-f3eabdce1c74/COWEAR-backside.jpeg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/cow-ear/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/cow-ear/brand-scene.webp",
+        "label": "Treat-time story",
+        "origin": "brand",
+        "source": "/Users/yigit/Desktop/gokhanbey/cowear/Cow ear-scene-01.png"
+      },
+      {
+        "type": "video",
+        "src": "/assets/catalog/videos/cow-ear.mp4",
+        "poster": "/assets/catalog/videos/cow-ear.webp",
+        "label": "Watch the story",
+        "origin": "brand",
+        "source": "/Users/yigit/Desktop/gokhanbey/cow ear v1.50.mp4"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Cow ear - text-#1.docx"
+  },
+  "lamb-ear": {
+    "ingredients": "100% Lamb Ear",
+    "packSize": "10 Count",
+    "analysis": [
+      65,
+      12,
+      4.5,
+      12
+    ],
+    "barcode": "860015404879",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "A lighter little lamb moment."
+    },
+    "overview": {
+      "en": "A relatively compact, lightweight lamb chew with its own aroma and natural texture. Its irregular edges create a different experience from a dense stick or a broad cow ear."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "Naturally manageable"
+        },
+        "body": {
+          "en": "A smaller ear format; suitability still depends on your dog and the individual piece."
+        }
+      },
+      {
+        "title": {
+          "en": "Distinctive lamb aroma"
+        },
+        "body": {
+          "en": "Introduces a different animal-protein flavour to a beef or chicken treat rotation."
+        }
+      },
+      {
+        "title": {
+          "en": "Simple ingredients"
+        },
+        "body": {
+          "en": "The package ingredient statement is 100% Lamb Ear."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-ear/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/706c42e8-fbf0-47ce-b51b-cc553ebdd844/lamb+ear-front.jpg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-ear/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/68e7f002-dcd8-42a2-8749-e52acb624dce/Iamb+ear-back.jpg"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-ear/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Lamb ear - text - #1.docx"
+  },
+  "lamb-tripe": {
+    "ingredients": "100% Lamb Tripe",
+    "packSize": "10 oz",
+    "analysis": [
+      70,
+      8,
+      6,
+      12
+    ],
+    "barcode": "860015404886",
+    "origin": "Türkiye",
+    "tagline": {
+      "en": "Follow that curious nose."
+    },
+    "overview": {
+      "en": "Dried lamb tripe brings a distinctive aroma and naturally ridged texture. Its irregular pieces invite dogs to smell, investigate and chew, adding variety to familiar beef or poultry rewards."
+    },
+    "highlights": [
+      {
+        "title": {
+          "en": "Aroma leads the way"
+        },
+        "body": {
+          "en": "A rich lamb scent makes the sensory experience a defining part of this treat."
+        }
+      },
+      {
+        "title": {
+          "en": "Natural surface texture"
+        },
+        "body": {
+          "en": "Irregular ridges and thicknesses give each piece its own character."
+        }
+      },
+      {
+        "title": {
+          "en": "Lamb, simply"
+        },
+        "body": {
+          "en": "The rear label lists 100% Lamb Tripe. An alternative animal-protein flavour in the collection."
+        }
+      }
+    ],
+    "media": [
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/front.webp",
+        "label": "Front of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/6bfa6a3d-7b0f-406d-af26-acdaa3247d43/lamb+Tribe-front.JPG"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/back.webp",
+        "label": "Back of pack",
+        "origin": "original",
+        "source": "https://images.squarespace-cdn.com/content/v1/68583e798a0fd138827a961e/ce216a2f-4d72-4416-9fe6-5c28b9a7e55e/lamb+Tribe-back.JPG"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/lifestyle-ai.webp",
+        "label": "A little inspiration",
+        "origin": "ai"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-1.webp",
+        "label": "Adventure 1",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-2.webp",
+        "label": "Adventure 2",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-3.webp",
+        "label": "Adventure 3",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-4.webp",
+        "label": "Adventure 4",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-5.webp",
+        "label": "Adventure 5",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-6.webp",
+        "label": "Adventure 6",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-7.webp",
+        "label": "Adventure 7",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-8.webp",
+        "label": "Adventure 8",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      },
+      {
+        "type": "image",
+        "src": "/assets/catalog/lamb-tripe/adventure-9.webp",
+        "label": "Adventure 9",
+        "origin": "brand",
+        "source": "lamb tripe Border collie -photo adventure #1.pdf"
+      }
+    ],
+    "sourceDocument": "textsofproducts/Lamb Tribe - text-#1.docx"
+  }
+}

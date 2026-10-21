@@ -1,0 +1,102 @@
+{
+  "bully-stick-6": {
+    "ingredient": "Dried beef pizzle",
+    "size": "6 inches (about 15 cm)",
+    "texture": "Firm, fibrous chew",
+    "features": [
+      "A single animal ingredient",
+      "A compact stick to hold between the paws",
+      "A chew-time activity with a natural beef aroma"
+    ]
+  },
+  "bully-stick-12": {
+    "ingredient": "Dried beef pizzle",
+    "size": "12 inches (about 30 cm)",
+    "texture": "Firm, fibrous chew",
+    "features": [
+      "A single animal ingredient",
+      "A longer stick format",
+      "A natural beef aroma and a chewy texture"
+    ]
+  },
+  "beef-lung": {
+    "ingredient": "Beef lung",
+    "size": "Natural pieces; sizes vary",
+    "texture": "Light, airy and crisp",
+    "features": [
+      "Easy to break into smaller rewards",
+      "A meaty aroma for treat-time interest",
+      "A different texture from a dense chew"
+    ]
+  },
+  "beef-trachea": {
+    "ingredient": "Beef trachea",
+    "size": "Natural pieces; sizes vary",
+    "texture": "Hollow, cartilage-based chew",
+    "features": [
+      "A distinctive tube shape",
+      "An open centre for an engaging chew",
+      "A mix of crunchy and chewy textures"
+    ]
+  },
+  "cow-ear": {
+    "ingredient": "Cow ear",
+    "size": "Natural shape; sizes vary",
+    "texture": "Cartilage-based, chewy texture",
+    "features": [
+      "A broad natural ear shape",
+      "A single animal ingredient",
+      "A texture to explore at a relaxed pace"
+    ]
+  },
+  "chicken-feet": {
+    "ingredient": "Chicken feet",
+    "size": "Natural pieces; sizes vary",
+    "texture": "Crunchy, naturally shaped pieces",
+    "features": [
+      "A recognisable poultry treat",
+      "A single animal ingredient",
+      "Contains skin, cartilage, tendons and small bones"
+    ]
+  },
+  "lamb-ear": {
+    "ingredient": "Lamb ear",
+    "size": "Natural shape; sizes vary",
+    "texture": "A lighter ear-shaped chew",
+    "features": [
+      "A lamb-based option for variety",
+      "Smaller in format than a cow ear",
+      "A natural shape and cartilage texture"
+    ]
+  },
+  "lamb-tripe": {
+    "ingredient": "Lamb tripe",
+    "size": "Natural pieces; sizes vary",
+    "texture": "Textured pieces with a strong aroma",
+    "features": [
+      "A distinctive lamb aroma",
+      "An alternative to beef or poultry treats",
+      "A textured treat to explore"
+    ]
+  },
+  "collagen-stick-6": {
+    "ingredient": "Beef collagen",
+    "size": "6 inches (about 15 cm)",
+    "texture": "Straight collagen chew",
+    "features": [
+      "A simple stick shape",
+      "A beef-derived collagen ingredient",
+      "An engaging chewing activity"
+    ]
+  },
+  "braided-collagen-stick": {
+    "ingredient": "Beef collagen",
+    "size": "6 inches (about 15 cm)",
+    "texture": "Braided collagen chew",
+    "features": [
+      "A twisted, braided shape",
+      "A beef-derived collagen ingredient",
+      "More shape and texture to explore"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+.form{display:grid;gap:17px;padding:30px;background:#fffefb;border:1px solid #e3e9dc;border-radius:23px;box-shadow:0 12px 32px #17374d0a;min-width:0}
+.form .eyebrow{margin-bottom:8px}.form h3{margin:0;color:#17374d;font-size:clamp(23px,2.5vw,30px);line-height:1.2;letter-spacing:-.035em}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form label{display:grid;gap:7px;min-width:0;color:#17374d;font-size:12px;font-weight:800}
+.form input,.form select,.form textarea{width:100%;min-width:0;border:1px solid #d5e2d8;border-radius:12px;background:#fbfdf8;padding:13px 14px;color:#17374d;font:inherit;font-weight:500;font-size:14px}
+.form textarea{resize:vertical;min-height:120px}.form input:focus-visible,.form select:focus-visible,.form textarea:focus-visible{outline:2px solid #278d87;outline-offset:3px}
+.form>button{justify-self:start}.form .note,.form .status{font-size:11px;line-height:1.65;margin:0;color:#647c82}.form .status{padding:12px 14px;background:#e7f4eb;border-radius:12px;color:#287564;overflow-wrap:anywhere}
+@media(max-width:600px){.form{padding:22px 18px;gap:15px}.row{grid-template-columns:1fr}.form input,.form select,.form textarea{font-size:16px}.form>button{width:100%;justify-content:center}}

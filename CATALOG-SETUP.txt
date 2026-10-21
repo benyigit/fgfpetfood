@@ -1,0 +1,54 @@
+PRODUCT CATALOG & COMMUNITY — DEPLOYMENT NOTES
+Updated: 21 October 2026
+
+LOCAL PREVIEWS
+Quipaw: http://127.0.0.1:3117/shop
+FGF: http://127.0.0.1:3118/shop
+Product detail: /shop/cow-ear (and each catalog handle)
+Community account: /account
+Treat bag: /cart
+
+SOURCE MATERIAL
+10 product documents, source blogs, product images, four videos and the lamb-tripe adventure PDF were inventoried in work/audit/catalog.
+All ten original front/back package photos were taken from the existing FGF website product pages. Each image source is recorded in data/catalog-details.json.
+Ingredient, pack-size, origin, barcode and guaranteed-analysis fields were transcribed from the photographed labels; batch dates are not treated as a promise about current stock.
+Ten reference-based AI lifestyle scenes are additional gallery images. The gallery labels them as AI scenes and retains the original package photos.
+Generation prompts and original output paths: work/audit/catalog/generated-images.json (in the parent workspace).
+All four supplied videos are included: the cow-ear video in its product gallery, three general brand videos in Happy Tails. The nine PDF adventure images are in the lamb-tripe gallery.
+
+SHOPIFY CONNECTION
+Set SHOPIFY_STORE_DOMAIN to the store's exact example.myshopify.com domain.
+Set SHOPIFY_STOREFRONT_ACCESS_TOKEN on the server, then restart the app.
+The Storefront API must have product reading and checkout/cart access; publish the products to that Storefront sales channel.
+Products and actual available variants/prices are fetched from Shopify, and cartCreate returns the Shopify checkout URL.
+Do not use an Admin API secret in public client code.
+The local data enriches the matching Shopify product by its handle or an explicit catalog:<id> product tag.
+Catalog IDs:
+beef-lung
+beef-trachea
+braided-collagen-stick
+bully-stick-6
+bully-stick-12
+chicken-feet
+collagen-stick-6
+cow-ear
+lamb-ear
+lamb-tripe
+Example: tag a Shopify product catalog:cow-ear if its Shopify handle differs.
+Without Shopify credentials the source catalog remains browsable, selected products can be kept in a local treat bag, and checkout is disabled. No prices, stock or payment results are invented.
+
+COMMUNITY ACCOUNT
+Separate from Shopify customer/checkout identity.
+Email/password registration, sign-in/out, dog profile, photo upload, private album, optional public-gallery sharing, permission withdrawal and photo deletion are implemented.
+Private is the default. Publishing requires the explicit per-photo checkbox. Consent text/version/time are recorded. Email and account name are never exposed by the public feed.
+Permission covers this website's gallery only; external social/advertising reuse requires a separate explicit permission scope.
+Passwords use salted scrypt hashes; session cookies are HttpOnly. Uploaded images are validated, resized, re-encoded and stripped of metadata, then kept outside the public asset folder.
+Node.js 24+ is required for built-in node:sqlite. Development stores data under the ignored .community directory in each repository.
+For a persistent single-server deployment, configure COMMUNITY_DATA_DIR to a private persistent directory and COMMUNITY_ORIGIN to the public HTTPS origin.
+VERCEL LIMITATION: the local SQLite/file adapter deliberately refuses account storage on Vercel. Connect a persistent hosted database and private object store before opening online accounts. A serverless storage adapter and credentials are still required for Vercel production.
+Email verification and password-recovery mail delivery are not included in this initial local account flow.
+
+DELIVERY STATUS
+Both applications compile with their production build commands. No automated functional tests were requested or run.
+The production release contains English content only. The bilingual preview is kept separately on the developer’s computer.
+Community accounts show a coming-soon state on Vercel until persistent account and photo storage is connected.
