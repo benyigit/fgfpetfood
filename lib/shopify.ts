@@ -3,6 +3,7 @@ import { isIP } from 'node:net';
 import { cache } from 'react';
 import { localCatalog, type CatalogProduct, type Media, type Variant } from './catalog';
 import productMap from '@/data/shopify-product-map.json';
+import { applyProductContent } from '@/lib/content-public';
 
 const API_VERSION = '2026-10';
 const UNAVAILABLE = 'The shop is temporarily unavailable. Please try again in a moment.';
@@ -97,7 +98,7 @@ function uniqueMedia(items: Media[]) {
 // React cache only deduplicates a server render, so prices and availability remain live.
 export const getCatalog = cache(async (ip?: string): Promise<CatalogProduct[]> => {
   const locals = localCatalog();
-  if (!shopConnected()) return locals;
+  if (!shopConnected()) return applyProductContent(locals);
   const all: Remote[] = [];
   let cursor: string | null = null;
   let includeTags = true;
@@ -168,7 +169,7 @@ export const getCatalog = cache(async (ip?: string): Promise<CatalogProduct[]> =
     } satisfies CatalogProduct;
   });
   // Keep established links and package details available until an explicit Shopify match exists.
-  return [...connected, ...locals.filter(p => !matchedLocalIds.has(p.id) && !usedIds.has(p.id))];
+  return applyProductContent([...connected, ...locals.filter(p => !matchedLocalIds.has(p.id) && !usedIds.has(p.id))]);
 });
 
 export function validateCheckoutLines(value: unknown): CheckoutLine[] {

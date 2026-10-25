@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from './language-provider';
 import { BlogCard } from './blog-card';
-import { getArticles } from '@/lib/blog';
+import type { BlogArticle } from '@/lib/blog';
 import styles from './blog.module.css';
 const savedFilters = 'fgf-blog-filters';
-export function BlogExplorer() {
+export function BlogExplorer({ articles }: { articles: BlogArticle[] }) {
   const {
     t,
     language
@@ -15,13 +15,12 @@ export function BlogExplorer() {
   const [category, setCategory] = useState('All stories');
   const [search, setSearch] = useState('');
   const [ready, setReady] = useState(false);
-  const articles = getArticles(language);
   const categories = ['All stories', ...new Set(articles.map(article => article.category))];
   useEffect(() => {
     try {
       const saved = JSON.parse(sessionStorage.getItem(savedFilters) || 'null');
       if (saved && typeof saved.search === 'string') setSearch(saved.search);
-      if (saved && getArticles().some(article => article.category === saved.category)) setCategory(saved.category);
+      if (saved && articles.some(article => article.category === saved.category)) setCategory(saved.category);
     } catch {}
     setReady(true);
   }, []);

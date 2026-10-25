@@ -15,7 +15,7 @@ export async function GET(_request: Request, context: Context) {
     const p = await getPhoto(context);
     if (!p.consent || p.hidden) {
       const member = await currentMember();
-      const permittedTeamAccess = member?.role === 'moderator' && (p.consent || p.social_consent);
+      const permittedTeamAccess = (member?.role === 'moderator' || member?.role === 'admin') && (p.consent || p.social_consent);
       if (member?.id !== p.user_id && !permittedTeamAccess) throw new CommunityError(404, 'Photo not found.');
     }
     const bytes = await readPhoto(p.id);

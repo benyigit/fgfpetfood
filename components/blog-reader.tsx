@@ -8,6 +8,7 @@ import { PageTrail } from './page-trail';
 import { BlogCard } from './blog-card';
 import { readingMinutes, storyCover, storySections, type BlogArticle } from '@/lib/blog';
 import styles from './blog.module.css';
+import { ContentMedia } from './content-media';
 type Props = {
   article: {
     en: BlogArticle;
@@ -39,9 +40,6 @@ export function BlogReader({
   const [active, setActive] = useState(sections[0]?.id);
   const [shareMessage, setShareMessage] = useState('');
   const [copyUrl, setCopyUrl] = useState('');
-  useEffect(() => {
-    document.title = `${post.title} — FGF Pet Food Blog`;
-  }, [post.title]);
   useEffect(() => {
     let frame = 0;
     const update = () => {
@@ -93,16 +91,17 @@ export function BlogReader({
           width: `${progress}%`
         }} /></div>
     <PageTrail page="blog" article />
-    <header className={`${styles.storyHeader} section-wrap`}><div className={styles.storyMeta}><span className={styles.category}>{t(post.category)}</span><span>{readingMinutes(post)} {'min read'}</span><span aria-hidden="true">✳</span><span>FGF PET FOOD BLOG</span></div><h1>{post.title}</h1><p>{'A little reading for the good moments you share with your dog.'}</p><button className={styles.shareButton} onClick={share}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" /></svg>{'Share this story'}</button><span className={styles.shareStatus} role="status">{shareMessage}</span>{copyUrl && <input className={styles.copyField} readOnly value={copyUrl} onFocus={event => event.target.select()} aria-label={'Story URL'} />}</header>
-    <figure className={`${styles.cover} section-wrap`}><img src={cover.src} alt={'A dog enjoying a little Quipaw treat-time moment'} fetchPriority="high" /><span className={styles.coverSticker}>GOOD DOG<br />READING CLUB</span><figcaption>{cover.ai ? 'An AI-created lifestyle scene.' : 'From the FGF story collection.'}</figcaption></figure>
+    <header className={`${styles.storyHeader} section-wrap`}><div className={styles.storyMeta}><span className={styles.category}>{t(post.category)}</span><span>{readingMinutes(post)} {'min read'}</span><span aria-hidden="true">✳</span><span>FGF PET FOOD BLOG</span></div><h1>{post.title}</h1>{post.subtitle && <p className={styles.storySubtitle}>{post.subtitle}</p>}<p>{post.excerpt}</p><button className={styles.shareButton} onClick={share}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" /></svg>{'Share this story'}</button><span className={styles.shareStatus} role="status">{shareMessage}</span>{copyUrl && <input className={styles.copyField} readOnly value={copyUrl} onFocus={event => event.target.select()} aria-label={'Story URL'} />}</header>
+    {cover.src && <figure className={`${styles.cover} section-wrap`}><ContentMedia media={cover} priority /><span className={styles.coverSticker}>GOOD DOG<br />READING CLUB</span><figcaption>{cover.ai ? 'An AI-created lifestyle scene.' : 'From the FGF story collection.'}</figcaption></figure>}
     <div className={`${styles.readingLayout} section-wrap`}>
       <aside className={styles.sidebar}><nav className={styles.contents} aria-label={'In this story'}><p><span aria-hidden="true">✷</span> {'In this story'}</p>{contents}</nav>{product && <Link href={`/shop/${product.id}`} className={styles.productNote}><img src={product.image} alt={t(product.name)} loading="lazy" /><span>{'Meet the chew'}<strong>{t(product.name)}</strong><small>{'Explore the product'} ↗</small></span></Link>}</aside>
       <article className={styles.readingContent} aria-label={post.title}>
         <details className={styles.mobileContents}><summary>{'What’s in this story?'}</summary><nav aria-label={'Contents'}>{contents}</nav></details>
 
+        {(post.media || []).slice(1).map((media, index) => <figure className={styles.inlineMedia} key={`${media.src}-${index}`}><ContentMedia media={media} />{media.origin === 'ai' && <figcaption>An AI-created lifestyle scene.</figcaption>}</figure>)}
         <div ref={content}>{sections.map((section, sectionIndex) => <section id={section.id} key={section.id} className={styles.textSection} data-story-section>
-          {section.id !== 'introduction' && <h2>{section.title}</h2>}
-          {section.blocks.map((block, index) => block.type === 'table' ? <div key={index} className={styles.tableScroll} tabIndex={0} role="region" aria-label={section.title}><table><caption>{'The details, at a glance'}</caption><thead><tr>{block.headers.map(header => <th key={header} scope="col">{header}</th>)}</tr></thead><tbody>{block.rows.map((row, rowIndex) => <tr key={rowIndex}>{row.map((cell, cellIndex) => cellIndex === 0 ? <th key={cellIndex} scope="row">{cell}</th> : <td key={cellIndex}>{cell}</td>)}</tr>)}</tbody></table></div> : <p className={sectionIndex === 0 && index === 0 ? styles.lead : block.text.startsWith('*') ? styles.footnote : undefined} key={index}>{block.text}</p>)}
+          {section.id !== 'introduction' && section.title && <h2>{section.title}</h2>}
+          {section.blocks.map((block, index) => block.type === 'media' ? <figure key={index} className={styles.inlineMedia}><ContentMedia media={block.media} />{block.media.origin === 'ai' && <figcaption>An AI-created lifestyle scene.</figcaption>}</figure> : block.type === 'table' ? <div key={index} className={styles.tableScroll} tabIndex={0} role="region" aria-label={section.title}><table><caption>{'The details, at a glance'}</caption><thead><tr>{block.headers.map(header => <th key={header} scope="col">{header}</th>)}</tr></thead><tbody>{block.rows.map((row, rowIndex) => <tr key={rowIndex}>{row.map((cell, cellIndex) => cellIndex === 0 ? <th key={cellIndex} scope="row">{cell}</th> : <td key={cellIndex}>{cell}</td>)}</tr>)}</tbody></table></div> : <p className={sectionIndex === 0 && index === 0 ? styles.lead : block.text.startsWith('*') ? styles.footnote : undefined} key={index}>{block.text}</p>)}
         </section>)}</div>
         <div className={styles.storyEnd}><span aria-hidden="true">✿</span><p>{'A good read. Now for a good little moment.'}</p><Link className="button button-dark" href="/blog#all-stories">{'Back to more good reads'} <span aria-hidden="true">→</span></Link>{product && <Link className={styles.endProduct} href={`/shop/${product.id}`}>{'Get to know this chew'} ↗</Link>}</div>
       </article>

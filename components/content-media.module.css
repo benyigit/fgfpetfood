@@ -1,0 +1,3 @@
+.media{display:block;width:100%;max-width:100%;height:auto;object-fit:cover;background:#e8eee8}video.media{object-fit:contain;background:#173548;max-height:75vh}.media:focus-visible{outline:3px solid #2b8f7b;outline-offset:4px}
+
+.media:global(.catalog-pack){height:100%;object-fit:contain}

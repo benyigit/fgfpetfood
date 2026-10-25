@@ -1,5 +1,14 @@
 import english from '@/data/articles.json';
-export type BlogArticle = (typeof english)[number];
+import type { CMSMedia, CMSPublished } from '@/lib/cms-types';
+export type BlogArticle = (typeof english)[number] & {
+  subtitle?: string;
+  media?: CMSMedia[];
+  sections?: StorySection[];
+  seoTitle?: string;
+  seoDescription?: string;
+  sourcePresentation?: boolean;
+  productId?: string;
+};
 export type StoryBlock = {
   type: 'paragraph';
   text: string;
@@ -7,6 +16,9 @@ export type StoryBlock = {
   type: 'table';
   headers: string[];
   rows: string[][];
+} | {
+  type: 'media';
+  media: CMSMedia;
 };
 export type StorySection = {
   id: string;
@@ -112,10 +124,18 @@ export function readingMinutes(article: BlogArticle) {
   return Math.max(1, Math.ceil(article.body.join(' ').split(/\s+/).length / 210));
 }
 export function storyCover(article: BlogArticle) {
+  const media = article.media?.[0];
+  if (media) return { ...media, ai: media.origin === 'ai' };
+  if (article.media) return { type: 'image' as const, src: '', alt: article.title, ai: false, poster: undefined as string | undefined };
   const product = presentation[article.id]?.product;
-  const ai = article.image.includes('/products/') && !!product;
+  const usePackPhoto = ['bully-stick-12', 'collagen-stick-6'].includes(article.id);
+  const generatedProductScene = article.image.includes('/products/') && !!product && !usePackPhoto;
+  const ai = generatedProductScene || article.image.includes('/stories/');
   return {
-    src: ai ? `/assets/catalog/${product}/lifestyle-ai.webp` : `/${article.image}`,
+    type: 'image' as const,
+    src: usePackPhoto && product ? `/assets/catalog/${product}/front.webp` : generatedProductScene ? `/assets/catalog/${product}/lifestyle-ai.webp` : article.image.startsWith('/') || /^https:\/\//.test(article.image) ? article.image : `/${article.image}`,
+    alt: article.title,
+    poster: undefined as string | undefined,
     ai
   };
 }
@@ -124,13 +144,14 @@ export function productForStory(id: string) {
 }
 
 // Paragraph indices refer to the supplied article text; source paragraphs are retained.
-export function storySections(article: BlogArticle, language: 'en') {
+export function storySections(article: BlogArticle, language: 'en' = 'en'): StorySection[] {
+  if (article.sections) return article.sections;
   const sections: StorySection[] = [{
     id: 'introduction',
     title: 'A little introduction',
     blocks: []
   }];
-  const config = presentation[article.id];
+  const config = article.sourcePresentation === false ? undefined : presentation[article.id];
   for (let index = 0; index < article.body.length; index++) {
     const text = article.body[index];
     if (config?.table?.start === index) {
@@ -149,10 +170,10 @@ export function storySections(article: BlogArticle, language: 'en') {
         rows
       });
       index = end;
-    } else if (true) {
+    } else if (config?.headings.includes(index) || /^\d+\.\s+\S/.test(text) || /^#{1,3}\s+\S/.test(text)) {
       sections.push({
         id: `section-${index}`,
-        title: text,
+        title: text.replace(/^#{1,3}\s+/, ''),
         blocks: []
       });
     } else {
@@ -162,5 +183,25 @@ export function storySections(article: BlogArticle, language: 'en') {
       });
     }
   }
-  return sections.filter(section => section.blocks.length > 0);
+  return sections.filter(section => section.blocks.length > 0 || section.id !== 'introduction');
+}
+
+const paragraphs = (body: string) => body.split(/\n\s*\n/).map(value => value.trim()).filter(Boolean);
+export function articleFromPublished(document: CMSPublished): BlogArticle {
+  const content = document.content;
+  const original = getArticle(document.slug);
+  const sections: StorySection[] | undefined = content.sections.length ? [
+    ...(content.body.trim() ? [{ id: 'introduction', title: 'Introduction', blocks: paragraphs(content.body).map(text => ({ type: 'paragraph' as const, text })) }] : []),
+    ...content.sections.map((section, index) => ({ id: `section-${index}`, title: section.heading,
+      blocks: [...paragraphs(section.body).map(text => ({ type: 'paragraph' as const, text })), ...(section.media ? [{ type: 'media' as const, media: section.media }] : [])],
+    })),
+  ] : undefined;
+  return {
+    id: document.slug, title: content.title, category: content.category || 'From the blog',
+    subtitle: content.subtitle, excerpt: content.excerpt, image: content.media[0]?.src || '', media: content.media,
+    body: [...paragraphs(content.body), ...content.sections.flatMap(section => [section.heading, ...paragraphs(section.body)])],
+    featured: content.featured || false, sections,
+    sourcePresentation: !!original && content.body === original.body.join('\n\n'),
+    productId: productForStory(document.slug), seoTitle: content.seoTitle, seoDescription: content.seoDescription,
+  };
 }

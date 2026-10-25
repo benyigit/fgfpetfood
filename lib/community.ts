@@ -100,7 +100,12 @@ export async function rateLimit(key: string, limit = 10, windowMs = 15 * 60 * 10
 }
 export async function requireModerator() {
   const member = await requireMember();
-  if (member.role !== 'moderator') throw new CommunityError(403, 'This area is for the brand team.');
+  if (member.role !== 'moderator' && member.role !== 'admin') throw new CommunityError(403, 'This area is for the brand team.');
+  return member;
+}
+export async function requireAdmin() {
+  const member = await requireMember();
+  if (member.role !== 'admin') throw new CommunityError(403, 'Administrator access is required.');
   return member;
 }
 export async function hashPassword(password: string) {

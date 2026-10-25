@@ -1,5 +1,6 @@
 "use client";
 
+import { usePageSection, SiteMedia } from "./site-content";
 import { useLanguage } from "@/components/language-provider";
 import Link from "next/link";
 import { MemberTools } from "./member-tools";
@@ -33,6 +34,8 @@ export function SiteHeader({
   </>;
 }
 export function SiteFooter() {
+  const footer = usePageSection("site", "footer");
+  const contact = usePageSection("site", "contact");
   const {
     t,
     language
@@ -40,13 +43,13 @@ export function SiteFooter() {
   return <>
     <section id="contact" className="fgf-help-section section-wrap" aria-labelledby="fgf-help-title">
       <div className="fgf-help-visual">
-        <img src="/assets/fgf-pdf-contact.webp" alt={t("We’re here to help: a friendly golden retriever wearing a headset beside an FGF laptop")} width="1948" height="908" />
+        <SiteMedia media={contact?.media[0]} />
       </div>
       <div className="fgf-help-panel">
         <div className="fgf-help-copy">
           <p className="eyebrow">{t("Real people, happy paws")}</p>
-          <h2 id="fgf-help-title">{t("Questions? We’re ")}<em>{t("all ears.")}</em></h2>
-          <p>{t("Need help finding a favorite or have a question about the Bazaar? Give our team a call or send us a note.")}</p>
+          <h2 id="fgf-help-title">{t(contact?.title || "")}{" "}<em>{t(contact?.subtitle || "")}</em></h2>
+          <p>{t(contact?.body || "")}</p>
         <div className="fgf-help-links">
           <a className="fgf-help-link fgf-help-phone" href="tel:+12813010010"><span>{t("Call the team")}</span><strong>281-301-0010</strong><small>{t("Tap to call us")}</small></a>
           <a className="fgf-help-link fgf-help-email" href="mailto:info@fgfpetfoodbazaar.com"><span>{t("Send a note")}</span><strong>{t("info@fgfpetfoodbazaar.com")}</strong><small>{t("We’d love to hear from you")}</small></a>
@@ -57,12 +60,12 @@ export function SiteFooter() {
     </section>
     <footer className="site-footer">
       <div className="footer-main section-wrap">
-        <div className="footer-brand"><Link href="/"><img src="/assets/logo-fgf.webp" alt={t("FGF Pet Food Bazaar")} /></Link><p>{t("FGF Pet Food Bazaar LLC is the company behind Quipaw. Our dog-treat range includes bully sticks, beef lung, cow and lamb ears, chicken feet, lamb tripe and collagen chews.")}</p><span className="footer-sparkle" aria-hidden="true">✦ ✿ ✦</span></div>
+        <div className="footer-brand"><Link href="/"><img src="/assets/logo-fgf.webp" alt={t("FGF Pet Food Bazaar")} /></Link><p>{t(footer?.body || "")}</p>{footer?.media[0] && <div className="cms-footer-visual"><SiteMedia media={footer.media[0]} /></div>}<span className="footer-sparkle" aria-hidden="true">✦ ✿ ✦</span></div>
         <div><h3>{t("Take a look")}</h3><Link href="/#brands">{t("Our brands")}</Link><Link href="/shop">{t("Shop the Bazaar")}</Link><Link href="/#happy-box">{t("Build a happy box")}</Link><Link href="/#happy-tails">{t("Happy tails scrapbook")}</Link><Link href="/blog">{t("Blog")}</Link><Link href="/events">{t("Events")}</Link></div>
         <div className="footer-contact"><h3>{t("Say hello")}</h3><a href="tel:+12813010010">☎ 281-301-0010</a><a href="mailto:info@fgfpetfoodbazaar.com">{t("✉ info@fgfpetfoodbazaar.com")}</a><a href="https://www.fgfpetfood.com/" target="_blank" rel="noreferrer">{t("Current FGF website ↗")}</a></div>
         <div className="footer-note"><span aria-hidden="true">🐾</span><strong>{t("Good food.")}<br />{t("Good company.")}</strong><small>{t("Happier days start here!")}</small><Link className="footer-note-link" href="/shop">{t("Find a new favorite →")}</Link></div>
       </div>
-      <div className="footer-community section-wrap"><Link href="/account">{"My account & photos ↗"}</Link><Link href="/cart">{"My treat bag ↗"}</Link></div>
+      <div className="footer-community section-wrap"><Link href="/account">{"My account & photos ↗"}</Link><Link href="/cart">{"My treat bag ↗"}</Link><Link href="/admin">{"Team login ↗"}</Link></div>
     <div className="footer-trademark section-wrap">QUIPAW is Registered trademark of FGF PET FOOD BAZAAR LLC</div>
     <div className="footer-bottom section-wrap"><span>{t("© FGF Pet Food Bazaar")}</span><span>{t("Made with a little extra tail-wag.")}</span><Link href="/#top">{t("Back to top ↑")}</Link></div>
     </footer>

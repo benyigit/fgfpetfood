@@ -1,3 +1,4 @@
+import type { CMSContent, CMSSection } from '@/lib/cms-types';
 import { products } from '@/data/products';
 import detailData from '@/data/catalog-details.json';
 export type Localized = {
@@ -38,6 +39,13 @@ export type CatalogProduct = {
   id: string;
   shopifyHandle?: string;
   shopifyProductId?: string;
+  cmsSections?: CMSSection[];
+  cmsProduct?: CMSContent['product'];
+  subtitle?: string;
+  excerpt?: string;
+  featured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
   name: string;
   kind: string;
   group: string;

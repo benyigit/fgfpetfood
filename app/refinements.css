@@ -87,3 +87,8 @@ html[lang=tr] .hero-copy h1{font-size:clamp(48px,5.6vw,88px)}
 .fgf-help-copy>.fgf-help-links{grid-template-columns:1fr;margin-top:24px;max-width:420px}.fgf-help-copy>p:not(.eyebrow){max-width:440px;margin:16px 0 0;color:#5d727b;font-size:.9rem}.fgf-help-copy{min-width:0;padding-top:8px}
 
 .main-nav>a{white-space:nowrap}.footer-brand p{max-width:360px;line-height:1.8;font-size:.85rem}
+
+/* Editable videos follow the existing image frames without autoplay. */
+.hero-photo video,.hero-image-frame video{height:100%;min-height:300px;object-fit:cover;border-radius:inherit}.event-art video,.pdf-community-art video{border-radius:inherit;aspect-ratio:4/3;object-fit:cover}.contact-pdf-banner video,.fgf-help-visual video{width:100%;border-radius:inherit;aspect-ratio:2.145/1;object-fit:cover}
+
+.cms-section-visual{margin:22px 0;max-height:500px;overflow:hidden;border-radius:24px}.cms-section-visual img,.cms-section-visual video{display:block;width:100%;max-height:500px;object-fit:contain}.cms-newsletter-visual{grid-column:1/-1}.cms-newsletter-visual img,.cms-newsletter-visual video{max-width:100%;max-height:320px;border-radius:18px}.cms-footer-visual img,.cms-footer-visual video{max-width:100%;max-height:240px;border-radius:16px}

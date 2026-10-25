@@ -59,3 +59,24 @@ Community accounts and photo uploads use the configured Neon database and privat
 This public release is English only. Turkish preview dictionaries and language controls are maintained only in the separate local preview checkout.
 
 Contact phone: 281-301-0010.
+
+
+## Brand studio / content management
+
+Open `/admin` and sign in with a brand account explicitly assigned the `admin` role. Registration always creates a member; a community moderator is not automatically a site administrator. Each deployment uses its own server-owned database namespace and media path, so granting Quipaw access does not grant FGF access. A trusted database operator must promote the exact verified account after owner approval. No email address has automatic administrator rights.
+
+The studio provides:
+
+- Products: website titles, descriptions, package details, images, videos and search metadata. Shopify continues to own product IDs, variants, prices, stock and checkout. Add products in Shopify; the studio discovers new connected products without overwriting saved editorial content.
+- Blog and Events: create content, edit sections and media, save drafts, preview, publish, or unpublish. Existing addresses stay fixed to preserve links. Event details have separate pages, back navigation and SEO metadata.
+- Website pages: named home, footer and contact sections, including headings and image/video replacements.
+- Media library: still JPG, PNG, WebP or AVIF up to 10 MB; MP4/WebM up to 100 MB. Cloud uploads use a private Blob store and a short-lived, single-file upload URL issued by the existing server's OIDC credentials. No store credentials are sent to the browser. Uploaded media is readable publicly only while referenced by published content. Local development uses private local files instead.
+- Inbox: contact submissions saved by `Send mail`, read/unread status and reversible archiving. A reply button opens the administrator's email app. The studio does not send outbound email or forward inbox messages to an external mailbox.
+
+Changes are saved as drafts first; publishing updates the public page. Concurrent edits return a conflict instead of silently overwriting another session. Publishing and saving are recorded in an audit trail. Unpublishing keeps the draft. On configured database outages, the CMS does not fall back to previously removed content.
+
+### Storage and deployment
+
+The existing `DATABASE_URL` (or `POSTGRES_URL`) and private `BLOB_STORE_ID` / Vercel OIDC connection are used. Existing `BLOB_READ_WRITE_TOKEN` installations remain supported. Namespaced `cms_documents`, `cms_audit`, `cms_assets`, `cms_asset_refs` and `cms_inbox` tables are created idempotently. Contact forms require no SMTP service. Set `SITE_URL` when the final brand domain replaces the current Vercel domain; this controls canonical URLs and the dynamic sitemap. `/admin`, `/account`, `/cart` and `/api` are excluded from search indexing. A future admin subdomain can route to the same protected application; it is not configured by this release.
+
+Public releases remain English only. The separate local bilingual preview is not a deployment source.
