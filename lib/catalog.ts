@@ -36,6 +36,8 @@ export type Variant = {
 };
 export type CatalogProduct = {
   id: string;
+  shopifyHandle?: string;
+  shopifyProductId?: string;
   name: string;
   kind: string;
   group: string;
@@ -51,7 +53,7 @@ export function localCatalog(): CatalogProduct[] {
     const details = (detailData as Record<string, Details>)[p.id];
     return {
       ...p,
-      media: details.media,
+      media: details?.media || [{ type: 'image', src: p.image, label: p.name, origin: 'original' }],
       details,
       variants: [],
       connected: false

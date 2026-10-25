@@ -4,9 +4,10 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from './language-provider';
 import { SiteHeader, SiteFooter } from './site-shell';
-import { useBag } from './commerce-provider';
+import { useBag, findBagProduct, validPrice } from './commerce-provider';
 import { money, type CatalogProduct, type Media } from '@/lib/catalog';
 import styles from './catalog.module.css';
+import bag from './bag.module.css';
 function Zoom({
   item,
   name,
@@ -50,14 +51,50 @@ export function ProductDetail({
   const [quantity, setQuantity] = useState(1);
   const [variantId, setVariantId] = useState(p.variants.find(v => v.availableForSale)?.id || p.variants[0]?.id || '');
   const [added, setAdded] = useState(false);
-  const {
-    add
-  } = useBag();
+  const [purchaseProduct, setPurchaseProduct] = useState(p);
+  const [storeStatus, setStoreStatus] = useState<'loading' | 'ready' | 'offline' | 'error'>('loading');
+  const [refresh, setRefresh] = useState(0);
+  const [addError, setAddError] = useState('');
+  const { add, hydrated } = useBag();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    let active = true;
+    setStoreStatus('loading');
+    fetch('/api/storefront', { cache: 'no-store', signal: controller.signal }).then(async response => {
+      const data = await response.json();
+      if (!response.ok || !Array.isArray(data.products) || typeof data.connected !== 'boolean') throw new Error('Shop unavailable');
+      if (!active) return;
+      const current = findBagProduct(data.products, p.id);
+      setPurchaseProduct(current || { ...p, connected: false, variants: [] });
+      setStoreStatus(data.connected ? 'ready' : 'offline');
+      setVariantId(selected => selected || current?.variants.find(v => v.availableForSale)?.id || current?.variants[0]?.id || '');
+    }).catch(() => { if (active) setStoreStatus('error'); }).finally(() => clearTimeout(timeout));
+    return () => { active = false; clearTimeout(timeout); controller.abort(); };
+  }, [p, refresh]);
+
+  useEffect(() => {
+    const onFocus = () => setRefresh(value => value + 1);
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
   const d = p.details;
   const item = p.media[index];
-  const variant = p.variants.find(v => v.id === variantId);
+  const variant = purchaseProduct.variants.find(v => v.id === variantId);
   const lang = 'en';
-  const canAdd = !p.connected || !!variant?.availableForSale;
+  const loading = storeStatus === 'loading';
+  const liveProduct = storeStatus === 'ready' && purchaseProduct.connected;
+  const canAdd = hydrated && (liveProduct
+    ? !!variant?.availableForSale && validPrice(variant.price)
+    : storeStatus === 'offline' || (storeStatus === 'ready' && !purchaseProduct.connected));
+  const purchaseNote = loading ? 'Checking the latest price and availability…'
+    : storeStatus === 'error' ? 'We could not check this pack right now. Please try again.'
+    : !liveProduct ? 'Save this treat for later. It is not available for online ordering yet.'
+    : !variant ? 'Please choose an available pack to continue.'
+    : !variant.availableForSale ? 'This pack is currently sold out. You can choose another pack or check back soon.'
+    : !validPrice(variant.price) ? 'The price for this pack is unavailable. Please try again.'
+    : 'Shipping, taxes and any discounts are calculated at Shopify checkout.';
   const backIndex = p.media.findIndex(m => m.label === 'Back of pack');
   return <><SiteHeader /><main className={styles.detail}>
     <nav className={`${styles.crumb} section-wrap`} aria-label={'Breadcrumb'}><Link href="/shop">{'The shop'}</Link><span>/</span><span>{t(p.name)}</span></nav>
@@ -72,15 +109,20 @@ export function ProductDetail({
       </div>
       <div className={styles.productInfo}><p className="eyebrow">QUIPAW · {t(p.kind)}</p><h1>{t(p.name)}</h1>{d && <p className={styles.tagline}>{d.tagline[lang]}</p>}<p className={styles.overview}>{d?.overview[lang] || p.description}</p>
         {d && <><div className={styles.seals}><span>✿ {'100% natural'}</span><span>1 {'Single ingredient'}</span><span>♡ {'No artificial flavors'}</span></div><dl className={styles.quickFacts}><div><dt>{'Inside the pack'}</dt><dd>{t(d.packSize)}</dd></div><div><dt>{'Origin'}</dt><dd>{d.origin}</dd></div></dl></>}
-        <div className={styles.purchase}>{variant && <strong className={styles.price}>{money(variant.price, language)}</strong>}{p.variants.length > 1 && <label>{'Choose a pack'}<select value={variantId} onChange={e => {
-                setVariantId(e.target.value);
-                setAdded(false);
-              }}>{p.variants.map(v => <option key={v.id} value={v.id}>{v.title}{v.availableForSale ? '' : ' · Sold out'}</option>)}</select></label>}
-          <div className={styles.buyRow}><label className={styles.quantity}><span className={styles.srOnly}>{'Quantity'}</span><button type="button" onClick={() => setQuantity(v => Math.max(1, v - 1))} aria-label={'Decrease quantity'}>−</button><output>{quantity}</output><button type="button" onClick={() => setQuantity(v => Math.min(20, v + 1))} aria-label={'Increase quantity'}>+</button></label><button className="button button-dark" disabled={!canAdd} onClick={() => {
-                add(p, variant, quantity);
-                setAdded(true);
-              }}>{!canAdd ? 'Sold out' : added ? 'Added to your bag ✓' : 'Add to treat bag'} <span aria-hidden="true">↗</span></button></div>
-          <p className={styles.purchaseNote}>{p.connected ? 'Secure payment at Shopify checkout.' : 'Collect your favourites. Online ordering is coming soon.'}</p>{added && <Link className={styles.bagLink} href="/cart">{'See your treat bag →'}</Link>}
+        <div className={styles.purchase} aria-busy={loading}>
+          {liveProduct && variant && validPrice(variant.price) && <><strong className={styles.price}>{money(variant.price, language)}</strong><small className={bag.productPriceNote}>{t('Price per pack')}</small><span className={bag.productStock} data-available={variant.availableForSale}>{t(variant.availableForSale ? 'Available to order' : 'Sold out')}</span></>}
+          {(purchaseProduct.variants.length > 1 || (purchaseProduct.variants.length > 0 && !variant)) && <label>{t('Choose a pack')}<select value={variantId} disabled={loading} onChange={event => {
+            setVariantId(event.target.value); setAdded(false); setAddError('');
+          }}>{!variant && <option value={variantId} disabled>{t('Choose an available pack')}</option>}{purchaseProduct.variants.map(v => <option key={v.id} value={v.id}>{v.title}{v.availableForSale ? '' : ` · ${t('Sold out')}`}</option>)}</select></label>}
+          <div className={styles.buyRow}><label className={styles.quantity}><span className={styles.srOnly}>{t('Quantity')}</span><button type="button" disabled={quantity <= 1} onClick={() => { setQuantity(value => Math.max(1, value - 1)); setAdded(false); }} aria-label={t('Decrease quantity')}>−</button><output>{quantity}</output><button type="button" disabled={quantity >= 20} onClick={() => { setQuantity(value => Math.min(20, value + 1)); setAdded(false); }} aria-label={t('Increase quantity')}>+</button></label><button className="button button-dark" disabled={!canAdd} onClick={() => {
+            if (!canAdd) return;
+            const saved = add(purchaseProduct, liveProduct ? variant : undefined, quantity);
+            setAdded(saved);
+            setAddError(saved ? '' : 'Your bag could not be updated. Please review your bag and try again.');
+          }}>{t(loading ? 'Checking availability…' : storeStatus === 'error' ? 'Temporarily unavailable' : liveProduct && !canAdd ? (variant && !variant.availableForSale ? 'Sold out' : 'Choose a pack') : added ? 'Added to your bag ✓' : liveProduct ? 'Add to treat bag' : 'Save to treat bag')} <span aria-hidden="true">↗</span></button></div>
+          <p className={bag.productStatus} data-error={storeStatus === 'error'} role="status">{t(purchaseNote)} {storeStatus === 'error' && <button className={bag.productRetry} type="button" onClick={() => setRefresh(value => value + 1)}>{t('Try again')} ↻</button>}</p>
+          {addError && <p className={bag.productStatus} data-error="true" role="alert">{t(addError)}</p>}
+          {added && <div className={bag.productAdded} role="status"><span>{t('A little more joy in their bag.')}</span><Link href="/cart">{t('View treat bag')} →</Link></div>}
         </div>
         <a className={styles.question} href="tel:+12813010010">{'A question about this chew?'} <strong>281-301-0010 ↗</strong></a>
       </div>
