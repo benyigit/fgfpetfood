@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     await savePhoto(photoId, image);
     savedId = photoId;
     await transaction([
-      { sql: 'INSERT INTO photos(id,user_id,dog_name,title,category,caption,consent,social_consent,created_at) VALUES (?,?,?,?,?,?,?)', values: [photoId, member.id, dogName, title, category, caption, Number(consent), Number(socialConsent), Date.now()] },
+      { sql: 'INSERT INTO photos(id,user_id,dog_name,title,category,caption,consent,social_consent,created_at) VALUES (?,?,?,?,?,?,?,?,?)', values: [photoId, member.id, dogName, title, category, caption, Number(consent), Number(socialConsent), Date.now()] },
       consentEvent(photoId, member.id, consent, 'website'),
       consentEvent(photoId, member.id, socialConsent, 'social')
     ]);
