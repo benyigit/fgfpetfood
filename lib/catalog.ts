@@ -1,6 +1,7 @@
 import type { CMSContent, CMSSection } from '@/lib/cms-types';
 import { products } from '@/data/products';
 import detailData from '@/data/catalog-details.json';
+import { localPriceSnapshot, type PriceSnapshot } from '@/lib/price-snapshot';
 export type Localized = {
   en: string;
 };
@@ -39,6 +40,8 @@ export type CatalogProduct = {
   id: string;
   shopifyHandle?: string;
   shopifyProductId?: string;
+  /** Dated display-only price; never used for ordering or availability. */
+  priceSnapshot?: PriceSnapshot;
   cmsSections?: CMSSection[];
   cmsProduct?: CMSContent['product'];
   subtitle?: string;
@@ -63,6 +66,7 @@ export function localCatalog(): CatalogProduct[] {
       ...p,
       media: details?.media || [{ type: 'image', src: p.image, label: p.name, origin: 'original' }],
       details,
+      priceSnapshot: localPriceSnapshot(p.id),
       variants: [],
       connected: false
     };

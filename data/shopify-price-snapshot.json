@@ -1,0 +1,17 @@
+{
+  "storeDomain": "sn12b8-ng.myshopify.com",
+  "products": {
+    "gid://shopify/Product/9556525383939": {
+      "amount": "18.00",
+      "currencyCode": "USD",
+      "verifiedAt": "2026-10-25T19:40:25.000Z",
+      "variantTitle": "Default Title"
+    },
+    "gid://shopify/Product/9545483976963": {
+      "amount": "30.00",
+      "currencyCode": "USD",
+      "verifiedAt": "2026-10-25T19:40:25.000Z",
+      "variantTitle": "Default Title"
+    }
+  }
+}

@@ -9,6 +9,7 @@ import { money, type CatalogProduct, type Media } from '@/lib/catalog';
 import styles from './catalog.module.css';
 import bag from './bag.module.css';
 import { ContentMedia } from './content-media';
+import { VerifiedProductPrice } from './verified-product-price';
 function Zoom({
   item,
   name,
@@ -94,6 +95,7 @@ export function ProductDetail({
   const lang = 'en';
   const loading = storeStatus === 'loading';
   const liveProduct = storeStatus === 'ready' && purchaseProduct.connected;
+  const priceSnapshot = purchaseProduct.priceSnapshot || p.priceSnapshot;
   const canAdd = hydrated && (liveProduct
     ? !!variant?.availableForSale && validPrice(variant.price)
     : storeStatus === 'offline' || (storeStatus === 'ready' && !purchaseProduct.connected));
@@ -119,7 +121,8 @@ export function ProductDetail({
       <div className={styles.productInfo}><p className="eyebrow">QUIPAW · {t(p.kind)}</p><h1>{t(p.name)}</h1>{p.subtitle && <p className={styles.subtitle}>{p.subtitle}</p>}{tagline && <p className={styles.tagline}>{tagline}</p>}{overview.split(/\n\s*\n/).filter(Boolean).map((text, i) => <p key={i} className={styles.overview}>{text}</p>)}
         {d && <><div className={styles.seals}><span>✿ {'100% natural'}</span><span>1 {'Single ingredient'}</span><span>♡ {'No artificial flavors'}</span></div><dl className={styles.quickFacts}><div><dt>{'Inside the pack'}</dt><dd>{t(d.packSize)}</dd></div><div><dt>{'Origin'}</dt><dd>{d.origin}</dd></div></dl></>}
         <div className={styles.purchase} aria-busy={loading}>
-          {liveProduct && variant && validPrice(variant.price) && <><strong className={styles.price}>{money(variant.price, language)}</strong><small className={bag.productPriceNote}>{t('Price per pack')}</small><span className={bag.productStock} data-available={variant.availableForSale}>{t(variant.availableForSale ? 'Available to order' : 'Sold out')}</span></>}
+          {liveProduct && variant && validPrice(variant.price) && <><strong className={styles.price}>{money(variant.price, language)} <small className={styles.priceCurrency}>{variant.price.currencyCode}</small></strong><small className={bag.productPriceNote}>{t('Price per pack')}</small><span className={bag.productStock} data-available={variant.availableForSale}>{t(variant.availableForSale ? 'Available to order' : 'Sold out')}</span></>}
+          {!liveProduct && priceSnapshot && <VerifiedProductPrice snapshot={priceSnapshot} />}
           {(purchaseProduct.variants.length > 1 || (purchaseProduct.variants.length > 0 && !variant)) && <label>{t('Choose a pack')}<select value={variantId} disabled={loading} onChange={event => {
             setVariantId(event.target.value); setAdded(false); setAddError('');
           }}>{!variant && <option value={variantId} disabled>{t('Choose an available pack')}</option>}{purchaseProduct.variants.map(v => <option key={v.id} value={v.id}>{v.title}{v.availableForSale ? '' : ` · ${t('Sold out')}`}</option>)}</select></label>}
