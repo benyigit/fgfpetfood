@@ -10,6 +10,7 @@ import { readingMinutes, storyCover, storySections, type BlogArticle } from '@/l
 import styles from './blog.module.css';
 import { ContentMedia } from './content-media';
 type Props = {
+  preview?: boolean;
   article: {
     en: BlogArticle;
   };
@@ -25,7 +26,8 @@ type Props = {
 export function BlogReader({
   article,
   related,
-  product
+  product,
+  preview = false
 }: Props) {
   const {
     language,
@@ -66,6 +68,7 @@ export function BlogReader({
     };
   }, [language, post.id]);
   async function share() {
+    if (preview) { setShareMessage('Sharing is disabled in this private preview.'); return; }
     const url = `${window.location.origin}/blog/${post.id}`;
     setShareMessage('');
     setCopyUrl('');

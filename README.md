@@ -67,7 +67,7 @@ Open `/admin` and sign in with a brand account explicitly assigned the `admin` r
 
 The studio provides:
 
-- Products: website titles, descriptions, package details, images, videos and search metadata. Shopify continues to own product IDs, variants, prices, stock and checkout. Add products in Shopify; the studio discovers new connected products without overwriting saved editorial content.
+- Products: website titles, descriptions, package details, images, videos and search metadata. Shopify continues to own product IDs, variants, prices, stock and checkout. Use New product to create an actual Shopify draft when Admin product access is connected. Import / sync products brings Shopify products into the studio without overwriting saved editorial drafts.
 - Blog and Events: create content, edit sections and media, save drafts, preview, publish, or unpublish. Existing addresses stay fixed to preserve links. Event details have separate pages, back navigation and SEO metadata.
 - Website pages: named home, footer and contact sections, including headings and image/video replacements.
 - Media library: still JPG, PNG, WebP or AVIF up to 10 MB; MP4/WebM up to 100 MB. Cloud uploads use a private Blob store and a short-lived, single-file upload URL issued by the existing server's OIDC credentials. No store credentials are sent to the browser. Uploaded media is readable publicly only while referenced by published content. Local development uses private local files instead.
@@ -80,3 +80,32 @@ Changes are saved as drafts first; publishing updates the public page. Concurren
 The existing `DATABASE_URL` (or `POSTGRES_URL`) and private `BLOB_STORE_ID` / Vercel OIDC connection are used. Existing `BLOB_READ_WRITE_TOKEN` installations remain supported. Namespaced `cms_documents`, `cms_audit`, `cms_assets`, `cms_asset_refs` and `cms_inbox` tables are created idempotently. Contact forms require no SMTP service. Set `SITE_URL` when the final brand domain replaces the current Vercel domain; this controls canonical URLs and the dynamic sitemap. `/admin`, `/account`, `/cart` and `/api` are excluded from search indexing. A future admin subdomain can route to the same protected application; it is not configured by this release.
 
 Public releases remain English only. The separate local bilingual preview is not a deployment source.
+
+
+## Website previews and product management
+
+The editor’s private preview renders the same components, styles, navigation and footer as the public website. Blog, event, product and named website-page drafts update without publishing. Desktop (1280px) and mobile (390px) viewports can be expanded. The iframe is protected by the exact administrator role; unsaved content travels only through same-origin, source-checked, channel-bound messages. Preview submissions, purchase actions and external navigation are blocked. The real public product uses live Shopify variant data; previewing a draft never changes price or stock.
+
+Products now includes a connection check, New product and Import / sync products. Both sites are configured for the shared merchant store `sn12b8-ng.myshopify.com`. A Shopify collaborator account is separate from the app credentials used by these servers:
+
+- Storefront access reads active products published to the Headless storefront and creates the shopper’s checkout cart.
+- Admin API access with `read_products` imports the store’s catalog; `write_products` also permits creation of Shopify drafts.
+- New product creates a Shopify DRAFT and an editorial draft for this website. Finish variants, prices, inventory and product activation in Shopify, and publish to Headless before sale.
+- Import preserves existing editorial content. Shopify price and availability are read live by the storefront.
+- Both websites lead to the same Shopify order system. Browser bags on the separate brand domains remain separate.
+
+Connection checks are read-only and never create an order or charge. A successful product read does not verify payment methods, shipping destinations, tax setup, or the complete checkout flow. Do not announce live sales until those settings and a separately authorized checkout check have been completed.
+
+## AI studio and social drafts
+
+The AI studio creates editable blog or social drafts using a selected CMS product as source material. Blog drafts open in the normal editor with the full website preview. Social drafts have an editable caption, a media picker, a platform preview and saved publication state. Manual social drafts work without an AI connection.
+
+AI generation requires server-only `OPENAI_API_KEY` and `OPENAI_MODEL`. These credentials are not stored in browser state or sent to visitors. Generation uses the Responses API and never publishes. A model draft must still be reviewed for accuracy and brand voice.
+
+Facebook and Instagram are separate destinations. The initial publisher supports Facebook Page text/single-photo posts and Instagram professional-account single JPEG posts. Videos, Reels, automatic schedules and cross-platform batch posting are not enabled. The administrator reviews the actual account reference, caption and media, confirms publication rights, and chooses Publish now. Saved server configuration is distinguished from a verified platform response.
+
+Connect the appropriate Meta app, Facebook Page and linked professional Instagram account, then configure the documented server environment values in `.env.example`. Meta may require app review and business verification for client-account publishing. Business Suite login alone is not an API integration. Use each brand’s own authorized destination account.
+
+Only ready images from the brand’s CMS media library that already appear in published website content can be published by this initial social flow. Community member images are excluded; their separate website/social consent workflow remains authoritative. Credentials stay on the server. Revision checks and durable publication attempts prevent accidental duplicate retries; ambiguous platform responses are marked for review instead of reported as a successful post.
+
+No live AI request, merchant-product mutation or social post is made by deployment. The owner/developer must provide the actual connections before those actions become available.

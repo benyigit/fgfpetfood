@@ -38,10 +38,12 @@ function Zoom({
 }
 export function ProductDetail({
   product: p,
-  related
+  related,
+  preview = false
 }: {
   product: CatalogProduct;
   related: CatalogProduct[];
+  preview?: boolean;
 }) {
   const {
     t,
@@ -53,12 +55,13 @@ export function ProductDetail({
   const [variantId, setVariantId] = useState(p.variants.find(v => v.availableForSale)?.id || p.variants[0]?.id || '');
   const [added, setAdded] = useState(false);
   const [purchaseProduct, setPurchaseProduct] = useState(p);
-  const [storeStatus, setStoreStatus] = useState<'loading' | 'ready' | 'offline' | 'error'>('loading');
+  const [storeStatus, setStoreStatus] = useState<'loading' | 'ready' | 'offline' | 'error'>(preview ? (p.connected ? 'ready' : 'offline') : 'loading');
   const [refresh, setRefresh] = useState(0);
   const [addError, setAddError] = useState('');
   const { add, hydrated } = useBag();
 
   useEffect(() => {
+    if (preview) { setPurchaseProduct(p); setStoreStatus(p.connected ? 'ready' : 'offline'); return; }
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20000);
     let active = true;
@@ -73,13 +76,15 @@ export function ProductDetail({
       setVariantId(selected => selected || current?.variants.find(v => v.availableForSale)?.id || current?.variants[0]?.id || '');
     }).catch(() => { if (active) setStoreStatus('error'); }).finally(() => clearTimeout(timeout));
     return () => { active = false; clearTimeout(timeout); controller.abort(); };
-  }, [p, refresh]);
+  }, [p, refresh, preview]);
 
   useEffect(() => {
+    if (preview) return;
     const onFocus = () => setRefresh(value => value + 1);
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
-  }, []);
+  }, [preview]);
+  useEffect(() => { setIndex(value => Math.min(value, Math.max(0, p.media.length - 1))); }, [p.media.length]);
   const d = p.details;
   const item = p.media[index];
   const extraFacts = !d ? p.cmsProduct : undefined;
@@ -119,6 +124,7 @@ export function ProductDetail({
             setVariantId(event.target.value); setAdded(false); setAddError('');
           }}>{!variant && <option value={variantId} disabled>{t('Choose an available pack')}</option>}{purchaseProduct.variants.map(v => <option key={v.id} value={v.id}>{v.title}{v.availableForSale ? '' : ` · ${t('Sold out')}`}</option>)}</select></label>}
           <div className={styles.buyRow}><label className={styles.quantity}><span className={styles.srOnly}>{t('Quantity')}</span><button type="button" disabled={quantity <= 1} onClick={() => { setQuantity(value => Math.max(1, value - 1)); setAdded(false); }} aria-label={t('Decrease quantity')}>−</button><output>{quantity}</output><button type="button" disabled={quantity >= 20} onClick={() => { setQuantity(value => Math.min(20, value + 1)); setAdded(false); }} aria-label={t('Increase quantity')}>+</button></label><button className="button button-dark" disabled={!canAdd} onClick={() => {
+            if (preview) { setAddError('Purchases are disabled in this private preview.'); return; }
             if (!canAdd) return;
             const saved = add(purchaseProduct, liveProduct ? variant : undefined, quantity);
             setAdded(saved);

@@ -1,6 +1,9 @@
 import type { CSSProperties, ReactNode } from 'react';
-export type AdminIconName = 'home' | 'product' | 'article' | 'event' | 'page' | 'inbox' | 'media' | 'arrow' | 'plus' | 'close' | 'search' | 'check' | 'image' | 'video' | 'upload' | 'logout' | 'eye' | 'chevron' | 'save' | 'mail' | 'archive';
+export type AdminIconName = 'home' | 'product' | 'article' | 'event' | 'page' | 'inbox' | 'media' | 'arrow' | 'plus' | 'close' | 'search' | 'check' | 'image' | 'video' | 'upload' | 'logout' | 'eye' | 'chevron' | 'save' | 'mail' | 'archive' | 'sparkles' | 'link' | 'copy';
 const paths: Record<AdminIconName, ReactNode> = {
+  sparkles: <><path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6Z"/><path d="M20 2v4m-2-2h4M3 19v3m-1.5-1.5h3"/></>,
+  link: <><path d="m10 13 4-4m-6 6-2 2a4.2 4.2 0 0 1-6-6l4-4a4.2 4.2 0 0 1 6 0m4 2 2-2a4.2 4.2 0 0 1 6 6l-4 4a4.2 4.2 0 0 1-6 0"/></>,
+  copy: <><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></>,
   home: <><path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/></>,
   product: <><path d="m4 7 8-4 8 4v11l-8 4-8-4Z"/><path d="m4 7 8 4 8-4M12 11v11M8 5l8 4"/></>,
   article: <><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h8M8 15h5"/></>,

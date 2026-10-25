@@ -75,6 +75,11 @@ async function query<T>(document: string, variables: object = {}, ip?: string): 
   }
 }
 
+export async function probeShopifyStorefront() {
+  const data = await query<{ shop: { name: string }; products: { nodes: { id: string }[] } }>('query StudioStorefront { shop { name } products(first: 1) { nodes { id } } }');
+  return { shopName: data.shop.name, hasProducts: data.products.nodes.length > 0 };
+}
+
 type PageInfo = { hasNextPage: boolean; endCursor: string | null };
 type Connection<T> = { nodes: T[]; pageInfo: PageInfo };
 type Remote = {

@@ -114,6 +114,7 @@ async function ensureSeeds() {
   })().catch(error => { seeded = undefined; throw error; });
   await seeded;
 }
+export async function seedCMSDocuments() { await ensureSeeds(); }
 let discoveredProductsAt = 0;
 async function discoverShopifyProducts() {
   if (Date.now() - discoveredProductsAt < 30000) return;

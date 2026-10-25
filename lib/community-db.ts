@@ -13,7 +13,7 @@ type Value = string | number | null;
 export type Statement = { sql: string; values?: Value[] };
 let local: DatabaseSync | undefined;
 let ready: Promise<void> | undefined;
-const tableNames = /\b(users|sessions|photos|consent_events|rate_limits|cms_documents|cms_audit|cms_assets|cms_asset_refs|cms_inbox|cms_inbox_status_created|cms_audit_document_created)\b/g;
+const tableNames = /\b(users|sessions|photos|consent_events|rate_limits|cms_documents|cms_audit|cms_assets|cms_asset_refs|cms_inbox|shopify_draft_requests|cms_inbox_status_created|cms_audit_document_created|studio_requests|social_drafts|social_history|social_attempts)\b/g;
 function cloudSQL(sql: string) {
   let i = 0;
   return sql.replace(tableNames, name => `${communityBrand}_${name}`).replace(/\?/g, () => `$${++i}`);
@@ -37,11 +37,16 @@ async function initialize() {
     `CREATE TABLE IF NOT EXISTS photos(id TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,dog_name TEXT NOT NULL,title TEXT NOT NULL DEFAULT '',category TEXT NOT NULL DEFAULT 'community',caption TEXT NOT NULL,consent INTEGER NOT NULL DEFAULT 0,social_consent INTEGER NOT NULL DEFAULT 0,hidden INTEGER NOT NULL DEFAULT 0,deleted_at BIGINT,created_at BIGINT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS consent_events(id ${pg ? 'BIGSERIAL' : 'INTEGER'} PRIMARY KEY,photo_id TEXT NOT NULL REFERENCES photos(id) ON DELETE CASCADE,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,granted INTEGER NOT NULL,scope TEXT NOT NULL DEFAULT 'website',version TEXT NOT NULL,text TEXT NOT NULL,created_at BIGINT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS rate_limits(key TEXT PRIMARY KEY,hits INTEGER NOT NULL,reset_at BIGINT NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS shopify_draft_requests(request_key TEXT PRIMARY KEY,payload_hash TEXT NOT NULL,actor_id TEXT NOT NULL,state TEXT NOT NULL,response TEXT,created_at BIGINT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS cms_documents(id TEXT PRIMARY KEY,kind TEXT NOT NULL,slug TEXT NOT NULL,draft TEXT NOT NULL,published TEXT,revision INTEGER NOT NULL DEFAULT 1,updated_at BIGINT NOT NULL,published_at BIGINT,mutation TEXT NOT NULL,UNIQUE(kind,slug))`,
     `CREATE TABLE IF NOT EXISTS cms_audit(id TEXT PRIMARY KEY,document_id TEXT NOT NULL,user_id TEXT NOT NULL,actor_name TEXT NOT NULL,action TEXT NOT NULL,revision INTEGER NOT NULL,created_at BIGINT NOT NULL,snapshot TEXT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS cms_assets(id TEXT PRIMARY KEY,pathname TEXT UNIQUE NOT NULL,type TEXT NOT NULL,name TEXT NOT NULL,content_type TEXT NOT NULL,size BIGINT NOT NULL,ready INTEGER NOT NULL DEFAULT 0,created_by TEXT NOT NULL,created_at BIGINT NOT NULL)`,
     `CREATE TABLE IF NOT EXISTS cms_asset_refs(document_id TEXT NOT NULL REFERENCES cms_documents(id) ON DELETE CASCADE,asset_id TEXT NOT NULL REFERENCES cms_assets(id),PRIMARY KEY(document_id,asset_id))`,
     `CREATE TABLE IF NOT EXISTS cms_inbox(id TEXT PRIMARY KEY,request_key TEXT UNIQUE NOT NULL,name TEXT NOT NULL,email TEXT NOT NULL,subject TEXT NOT NULL,message TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'unread',created_at BIGINT NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS studio_requests(request_key TEXT PRIMARY KEY,payload_hash TEXT NOT NULL,actor_id TEXT NOT NULL,state TEXT NOT NULL,result TEXT,error TEXT NOT NULL DEFAULT '',created_at BIGINT NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS social_drafts(id TEXT PRIMARY KEY,platform TEXT NOT NULL,caption TEXT NOT NULL,media_src TEXT NOT NULL,media_alt TEXT NOT NULL,source_product_id TEXT NOT NULL DEFAULT '',revision INTEGER NOT NULL DEFAULT 1,status TEXT NOT NULL DEFAULT 'draft',generated INTEGER NOT NULL DEFAULT 0,created_by TEXT NOT NULL,created_at BIGINT NOT NULL,updated_at BIGINT NOT NULL,published_at BIGINT,published_url TEXT NOT NULL DEFAULT '',error TEXT NOT NULL DEFAULT '',mutation TEXT NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS social_history(id TEXT PRIMARY KEY,draft_id TEXT NOT NULL,action TEXT NOT NULL,actor_name TEXT NOT NULL,actor_id TEXT NOT NULL,created_at BIGINT NOT NULL,detail TEXT NOT NULL,snapshot TEXT NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS social_attempts(id TEXT PRIMARY KEY,request_key TEXT UNIQUE NOT NULL,draft_id TEXT NOT NULL,revision INTEGER NOT NULL,account_id TEXT NOT NULL,platform TEXT NOT NULL,state TEXT NOT NULL,container_id TEXT NOT NULL DEFAULT '',external_id TEXT NOT NULL DEFAULT '',error TEXT NOT NULL DEFAULT '',created_at BIGINT NOT NULL,updated_at BIGINT NOT NULL)`,
     `CREATE INDEX IF NOT EXISTS cms_inbox_status_created ON cms_inbox(status,created_at)`,
     `CREATE INDEX IF NOT EXISTS cms_audit_document_created ON cms_audit(document_id,created_at)`
   ];
