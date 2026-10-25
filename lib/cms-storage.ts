@@ -1,5 +1,5 @@
 import 'server-only';
-import { get, head, del, issueSignedToken, presignUrl, parseStoreIdFromDelegationToken } from '@vercel/blob';
+import { get, head, del, issueSignedToken, presignUrl } from '@vercel/blob';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -39,16 +39,9 @@ export async function prepareCMSAsset(value: unknown, actor: Member) {
   const validUntil = Date.now() + 15 * 60 * 1000;
   const token = await issueSignedToken({ pathname, operations: ['put'], allowedContentTypes: [contentType], maximumSizeInBytes: Number(size), validUntil });
   const { presignedUrl } = await presignUrl(token, { operation: 'put', pathname, access: 'private', allowedContentTypes: [contentType], maximumSizeInBytes: Number(size), validUntil, addRandomSuffix: false, allowOverwrite: false, cacheControlMaxAge: 60 });
-  return { asset, pathname, uploadMode: 'presigned' as const, uploadUrl: presignedUrl, uploadHeaders: {
-    'Content-Type': contentType,
-    'x-content-type': contentType,
-    'x-vercel-blob-access': 'private',
-    'x-vercel-blob-store-id': parseStoreIdFromDelegationToken(token.delegationToken),
-    'x-api-version': '13',
-    'x-add-random-suffix': '0',
-    'x-allow-overwrite': '0',
-    'x-cache-control-max-age': '60'
-  } };
+  // Upload constraints are already signed into the URL. Sending them again as
+  // legacy x-* headers makes Blob reject the browser's CORS preflight.
+  return { asset, pathname, uploadMode: 'presigned' as const, uploadUrl: presignedUrl, uploadHeaders: { 'Content-Type': contentType } };
 }
 export async function assetForUpload(assetId: string, actor: Member) {
   const asset = await getCMSAsset(assetId);
