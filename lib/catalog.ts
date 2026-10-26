@@ -40,6 +40,8 @@ export type CatalogProduct = {
   id: string;
   shopifyHandle?: string;
   shopifyProductId?: string;
+  /** All packs are temporarily withheld until the merchant confirms their price. */
+  priceReviewRequired?: boolean;
   /** Dated display-only price; never used for ordering or availability. */
   priceSnapshot?: PriceSnapshot;
   cmsSections?: CMSSection[];

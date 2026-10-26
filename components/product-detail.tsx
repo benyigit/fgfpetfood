@@ -96,12 +96,14 @@ export function ProductDetail({
   const loading = storeStatus === 'loading';
   const liveProduct = storeStatus === 'ready' && purchaseProduct.connected;
   const priceSnapshot = purchaseProduct.priceSnapshot || p.priceSnapshot;
-  const canAdd = hydrated && (liveProduct
+  const awaitingPrice = liveProduct && purchaseProduct.priceReviewRequired;
+  const canAdd = hydrated && !awaitingPrice && (liveProduct
     ? !!variant?.availableForSale && validPrice(variant.price)
     : storeStatus === 'offline' || (storeStatus === 'ready' && !purchaseProduct.connected));
   const purchaseNote = loading ? 'Checking the latest price and availability…'
     : storeStatus === 'error' ? 'We could not check this pack right now. Please try again.'
     : !liveProduct ? 'Save this treat for later. It is not available for online ordering yet.'
+    : awaitingPrice ? 'This pack will be available once its price has been confirmed.'
     : !variant ? 'Please choose an available pack to continue.'
     : !variant.availableForSale ? 'This pack is currently sold out. You can choose another pack or check back soon.'
     : !validPrice(variant.price) ? 'The price for this pack is unavailable. Please try again.'
@@ -121,6 +123,7 @@ export function ProductDetail({
       <div className={styles.productInfo}><p className="eyebrow">QUIPAW · {t(p.kind)}</p><h1>{t(p.name)}</h1>{p.subtitle && <p className={styles.subtitle}>{p.subtitle}</p>}{tagline && <p className={styles.tagline}>{tagline}</p>}{overview.split(/\n\s*\n/).filter(Boolean).map((text, i) => <p key={i} className={styles.overview}>{text}</p>)}
         {d && <><div className={styles.seals}><span>✿ {'100% natural'}</span><span>1 {'Single ingredient'}</span><span>♡ {'No artificial flavors'}</span></div><dl className={styles.quickFacts}><div><dt>{'Inside the pack'}</dt><dd>{t(d.packSize)}</dd></div><div><dt>{'Origin'}</dt><dd>{d.origin}</dd></div></dl></>}
         <div className={styles.purchase} aria-busy={loading}>
+          {awaitingPrice && <strong className={styles.price}>Price being confirmed</strong>}
           {liveProduct && variant && validPrice(variant.price) && <><strong className={styles.price}>{money(variant.price, language)} <small className={styles.priceCurrency}>{variant.price.currencyCode}</small></strong><small className={bag.productPriceNote}>{t('Price per pack')}</small><span className={bag.productStock} data-available={variant.availableForSale}>{t(variant.availableForSale ? 'Available to order' : 'Sold out')}</span></>}
           {!liveProduct && priceSnapshot && <VerifiedProductPrice snapshot={priceSnapshot} />}
           {(purchaseProduct.variants.length > 1 || (purchaseProduct.variants.length > 0 && !variant)) && <label>{t('Choose a pack')}<select value={variantId} disabled={loading} onChange={event => {
@@ -132,7 +135,7 @@ export function ProductDetail({
             const saved = add(purchaseProduct, liveProduct ? variant : undefined, quantity);
             setAdded(saved);
             setAddError(saved ? '' : 'Your bag could not be updated. Please review your bag and try again.');
-          }}>{t(loading ? 'Checking availability…' : storeStatus === 'error' ? 'Temporarily unavailable' : liveProduct && !canAdd ? (variant && !variant.availableForSale ? 'Sold out' : 'Choose a pack') : added ? 'Added to your bag ✓' : liveProduct ? 'Add to treat bag' : 'Save to treat bag')} <span aria-hidden="true">↗</span></button></div>
+          }}>{t(loading ? 'Checking availability…' : storeStatus === 'error' ? 'Temporarily unavailable' : awaitingPrice ? 'Price being confirmed' : liveProduct && !canAdd ? (variant && !variant.availableForSale ? 'Sold out' : 'Choose a pack') : added ? 'Added to your bag ✓' : liveProduct ? 'Add to treat bag' : 'Save to treat bag')} <span aria-hidden="true">↗</span></button></div>
           <p className={bag.productStatus} data-error={storeStatus === 'error'} role="status">{t(purchaseNote)} {storeStatus === 'error' && <button className={bag.productRetry} type="button" onClick={() => setRefresh(value => value + 1)}>{t('Try again')} ↻</button>}</p>
           {addError && <p className={bag.productStatus} data-error="true" role="alert">{t(addError)}</p>}
           {added && <div className={bag.productAdded} role="status"><span>{t('A little more joy in their bag.')}</span><Link href="/cart">{t('View treat bag')} →</Link></div>}

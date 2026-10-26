@@ -4,6 +4,7 @@ import { cache } from 'react';
 import { localCatalog, type CatalogProduct, type Media, type Variant } from './catalog';
 import productMap from '@/data/shopify-product-map.json';
 import { applyProductContent } from '@/lib/content-public';
+import { requiresPriceReview } from '@/lib/shopify-price-policy';
 
 const API_VERSION = '2026-10';
 const UNAVAILABLE = 'The shop is temporarily unavailable. Please try again in a moment.';
@@ -150,7 +151,8 @@ export const getCatalog = cache(async (ip?: string): Promise<CatalogProduct[]> =
 
   const matchedLocalIds = new Set<string>();
   const usedIds = new Set<string>();
-  const storeMap = (productMap as Record<string, Record<string, string>>)[config().domain] || {};
+  const { domain } = config();
+  const storeMap = (productMap as Record<string, Record<string, string>>)[domain] || {};
   const connected = all.map(p => {
     const mappedId = storeMap[p.id];
     const mappedLocal = locals.find(l => l.id === mappedId);
@@ -163,6 +165,8 @@ export const getCatalog = cache(async (ip?: string): Promise<CatalogProduct[]> =
     if (usedIds.has(id)) throw new ShopError(UNAVAILABLE, 503, 'CATALOG_MAPPING_AMBIGUOUS');
     usedIds.add(id);
     if (local) matchedLocalIds.add(local.id);
+    const variants = p.variants.nodes.filter(variant => !requiresPriceReview(domain, p.id, variant.price));
+    const priceReviewRequired = p.variants.nodes.length > 0 && variants.length === 0;
     const remoteMedia: Media[] = p.images.nodes.map(im => ({ type: 'image', src: im.url, label: im.altText || p.title, origin: 'original' }));
     return {
       id, shopifyHandle: p.handle, shopifyProductId: p.id,
@@ -170,7 +174,7 @@ export const getCatalog = cache(async (ip?: string): Promise<CatalogProduct[]> =
       image: p.images.nodes[0]?.url || local?.image || '',
       description: p.description || local?.description || '', details: local?.details,
       media: uniqueMedia([...remoteMedia, ...(local?.media || [])]),
-      variants: p.variants.nodes, connected: true
+      variants, priceReviewRequired, connected: true
     } satisfies CatalogProduct;
   });
   // Keep established links and package details available until an explicit Shopify match exists.
@@ -200,13 +204,13 @@ export async function checkout(input: CheckoutLine[], ip?: string): Promise<stri
   const lines = validateCheckoutLines(input);
   const data = await query<{
     cartCreate: {
-      cart: { checkoutUrl: string; totalQuantity: number; lines: Connection<{ quantity: number; merchandise: { id: string } }> } | null;
+      cart: { checkoutUrl: string; totalQuantity: number; lines: Connection<{ quantity: number; merchandise: { id: string; product: { id: string }; price: Variant['price'] } }> } | null;
       userErrors: { code: string | null; field: string[] | null; message: string }[];
       warnings: CartWarning[];
     }
   }>(`mutation Cart($input:CartInput!) {
     cartCreate(input:$input) {
-      cart { checkoutUrl totalQuantity lines(first:250) { nodes { quantity merchandise { ... on ProductVariant { id } } } pageInfo { hasNextPage endCursor } } }
+      cart { checkoutUrl totalQuantity lines(first:250) { nodes { quantity merchandise { ... on ProductVariant { id product { id } price { amount currencyCode } } } } pageInfo { hasNextPage endCursor } } }
       userErrors { code field message }
       warnings { code message target }
     }
@@ -214,6 +218,11 @@ export async function checkout(input: CheckoutLine[], ip?: string): Promise<stri
   const { cart, userErrors, warnings } = data.cartCreate;
   if (userErrors.length) throw new ShopError(userErrors[0].message, 409, 'CART_REJECTED');
   if (!cart) throw new ShopError('Your checkout could not be opened. Please try again.');
+  // Check Shopify's current returned prices as well as the public catalog. A saved bag
+  // or a direct API request must not bypass the merchant's pending price review.
+  if (cart.lines.nodes.some(({ merchandise }) => requiresPriceReview(config().domain, merchandise.product.id, merchandise.price))) {
+    throw new ShopError('A pack in your bag is awaiting price confirmation. Please remove it before checkout.', 409, 'PRICE_REVIEW_REQUIRED');
+  }
   const actualLines = cart.lines.nodes.map(line => ({ merchandiseId: line.merchandise.id, quantity: line.quantity }));
   const actualQuantities = new Map<string, number>();
   for (const line of actualLines) actualQuantities.set(line.merchandiseId, (actualQuantities.get(line.merchandiseId) || 0) + line.quantity);

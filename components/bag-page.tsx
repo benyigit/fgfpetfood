@@ -161,6 +161,7 @@ export function BagPage() {
         {resolved.map(({ line, variant, product }) => {
           const issue = status !== 'ready' ? '' : !product ? 'This treat is no longer available in the shop.'
             : !product.connected ? 'This treat is not available for online ordering yet.'
+            : product.priceReviewRequired ? 'This pack is awaiting price confirmation.'
             : !variant ? 'Please choose an available pack.'
             : !variant.availableForSale ? 'This pack is currently sold out.'
             : !validPrice(variant.price) ? 'The price for this pack is unavailable.' : '';
@@ -170,8 +171,8 @@ export function BagPage() {
             <div className={bag.itemBody}>
               <Link href={href}><h2>{t(product?.name || line.name)}</h2></Link>
               {(variant?.title || line.variantTitle) && (variant?.title || line.variantTitle) !== 'Default Title' && <span className={bag.variant}>{variant?.title || line.variantTitle}</span>}
-              <p className={bag.price}>{status === 'ready' && variant && validPrice(variant.price) ? money(variant.price, language) : status === 'loading' ? t('Checking price…') : t('Price currently unavailable')} {status === 'ready' && variant && validPrice(variant.price) && <small>{t('each')}</small>}</p>
-              {issue && <p className={bag.itemIssue}>{t(issue)} <Link href={href}>{t(product?.connected ? 'Choose a pack →' : 'Explore the shop →')}</Link></p>}
+              <p className={bag.price}>{status === 'ready' && variant && validPrice(variant.price) ? money(variant.price, language) : status === 'loading' ? t('Checking price…') : product?.priceReviewRequired ? t('Price being confirmed') : t('Price currently unavailable')} {status === 'ready' && variant && validPrice(variant.price) && <small>{t('each')}</small>}</p>
+              {issue && <p className={bag.itemIssue}>{t(issue)} <Link href={href}>{t(product?.priceReviewRequired ? 'View this treat →' : product?.connected ? 'Choose a pack →' : 'Explore the shop →')}</Link></p>}
               <div className={bag.itemActions}><label>{t('Quantity')} <select value={line.quantity} disabled={busy} aria-label={`${t('Quantity')} — ${t(line.name)}`} onChange={event => { change(lineKey(line), Number(event.target.value)); setError(''); }}>{Array.from({ length: 20 }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label><button type="button" onClick={() => { change(lineKey(line), 0); setError(''); }} disabled={busy} aria-label={`${t('Remove')} ${t(line.name)}`}>{t('Remove')}</button></div>
             </div>
             {status === 'ready' && variant && validPrice(variant.price) && <strong className={bag.lineTotal}>{money({ ...variant.price, amount: String(Number(variant.price.amount) * line.quantity) }, language)}</strong>}
