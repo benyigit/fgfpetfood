@@ -1,4 +1,5 @@
 import 'server-only';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync, chmodSync } from 'node:fs';
 import path from 'node:path';
@@ -6,6 +7,13 @@ import { neon } from '@neondatabase/serverless';
 
 // A server-owned namespace keeps the two brands' accounts and permissions separate.
 export const communityBrand = 'fgfpetfood';
+export type StudioBrand = 'quipaw' | 'fgfpetfood';
+const studioScope = new AsyncLocalStorage<StudioBrand>();
+export function withStudioBrand<T>(brand: StudioBrand, action: () => Promise<T>): Promise<T> {
+  if (brand !== 'quipaw' && brand !== 'fgfpetfood') throw new Error('Invalid brand');
+  if (!cloudDatabase()) throw new Error('Brand sharing requires the connected shared database');
+  return studioScope.run(brand, action);
+}
 const connection = () => process.env.DATABASE_URL || process.env.POSTGRES_URL;
 export const cloudDatabase = () => Boolean(connection());
 export const localDataDir = () => path.resolve(/* turbopackIgnore: true */process.env.COMMUNITY_DATA_DIR || '.community');
@@ -16,7 +24,7 @@ let ready: Promise<void> | undefined;
 const tableNames = /\b(users|sessions|photos|consent_events|rate_limits|cms_documents|cms_audit|cms_assets|cms_asset_refs|cms_inbox|shopify_draft_requests|cms_inbox_status_created|cms_audit_document_created|studio_requests|social_drafts|social_history|social_attempts)\b/g;
 function cloudSQL(sql: string) {
   let i = 0;
-  return sql.replace(tableNames, name => `${communityBrand}_${name}`).replace(/\?/g, () => `$${++i}`);
+  return sql.replace(tableNames, name => `${studioScope.getStore() || communityBrand}_${name}`).replace(/\?/g, () => `$${++i}`);
 }
 function localDB() {
   if (local) return local;
